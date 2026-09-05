@@ -1,0 +1,34 @@
+name: "📝 Submit News Article"
+description: "Manually submit an AI news article to be published on ClaudeHub"
+title: "[NEWS] Your Headline Here"
+labels: ["manual-news"]
+body:
+  - type: input
+    id: headline
+    attributes:
+      label: Headline
+      description: "The article headline (keep under 70 characters)"
+      placeholder: "Anthropic Releases New MCP Protocol v2.1"
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Article Content / Summary
+      description: "Write the full article or a detailed summary (200-500 words)"
+      placeholder: "Write your article here..."
+    validations:
+      required: true
+  - type: input
+    id: image
+    attributes:
+      label: Image URL (optional)
+      description: "Link to a header image. Leave blank to auto-generate."
+      placeholder: "https://example.com/image.jpg"
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: "Comma-separated tags"
+      placeholder: "Claude, MCP, AI tools"
+      value: "AI news, tech news"
