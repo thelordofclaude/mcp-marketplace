@@ -1,3 +1,5 @@
+'use client'
+
 import SearchBar from '../components/SearchBar'
 import FeaturedBar from '../components/FeaturedBar'
 import HeroCarousel from '../components/HeroCarousel'
