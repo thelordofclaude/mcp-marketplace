@@ -1,0 +1,33 @@
+name: Auto Publish AI News
+
+on:
+  schedule:
+    # Runs at 8 AM and 6 PM UTC (2 articles/day after month 1)
+    # For month 1, only the 8 AM run produces content (see script logic)
+    - cron: '0 8,18 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests beautifulsoup4
+      - name: Generate News Articles
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/generate_news.py
+      - name: Commit & Push
+        run: |
+          git config user.name "ClaudeHub Bot"
+          git config user.email "bot@claudehub.ai"
+          git add content/news/ processed-news.json
+          git diff --cached --quiet || git commit -m "Auto: AI news [$(date +%Y-%m-%d)]"
+          git push

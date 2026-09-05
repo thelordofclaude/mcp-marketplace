@@ -1,0 +1,30 @@
+name: Auto Publish MCP Servers
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Generate MCP Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/generate_mcp.py
+      - name: Commit & Push
+        run: |
+          git config user.name "ClaudeHub Bot"
+          git config user.email "bot@claudehub.ai"
+          git add content/mcp-servers/ processed-mcp.json
+          git diff --cached --quiet || git commit -m "Auto: MCP servers [$(date +%Y-%m-%d)]"
+          git push

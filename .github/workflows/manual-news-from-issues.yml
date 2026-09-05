@@ -1,0 +1,32 @@
+name: Publish Manual News from Issues
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  publish:
+    if: contains(github.event.issue.labels.*.name, 'manual-news')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Convert Issue to News Article
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: python scripts/convert_issue_to_news.py
+      - name: Commit, Push & Close Issue
+        run: |
+          git config user.name "ClaudeHub Bot"
+          git config user.email "bot@claudehub.ai"
+          git add content/news/
+          git diff --cached --quiet || git commit -m "Manual news: ${{ github.event.issue.title }}"
+          git push
