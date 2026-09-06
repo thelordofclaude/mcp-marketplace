@@ -1,12 +1,14 @@
 {
   "ids": [
-    875022659919
+    875022659919,
+    569078312582
   ],
   "slugs": [
-    "ai-update-what-will-apple-s-john-ternus-era-look-like-0"
+    "ai-update-what-will-apple-s-john-ternus-era-look-like-0",
+    "another-swarm-of-openai-agents-reached-the-open-internet-wit-0"
   ],
-  "last_run": "2026-09-05T18:08:17.295498",
-  "total": 1,
+  "last_run": "2026-09-06T08:08:24.398290",
+  "total": 2,
   "today_count": 1,
-  "today_date": "2026-09-05"
+  "today_date": "2026-09-06"
 }
