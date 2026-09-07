@@ -1,0 +1,80 @@
+---
+slug: skills-category-skills
+title: "Claude Skills"
+category: skills
+type: category
+---
+
+# Claude Skills
+
+- [claude-skills](/claude-skill/claude-skills/) — ⭐ 25,640
+- [claude-skills](/claude-skill/claude-skills/) — ⭐ 11,348
+- [awesome-claude-skills](/claude-skill/awesome-claude-skills/) — ⭐ 10,108
+- [guizang-social-card-skill](/claude-skill/guizang-social-card-skill/) — ⭐ 6,891
+- [internet-court-skill](/claude-skill/internet-court-skill/) — ⭐ 5,426
+- [im-not-ai](/claude-skill/im-not-ai/) — ⭐ 5,298
+- [obsidian-second-brain](/claude-skill/obsidian-second-brain/) — ⭐ 4,356
+- [Claude-to-IM-skill](/claude-skill/claude-to-im-skill/) — ⭐ 2,875
+- [mono-color-skill](/claude-skill/mono-color-skill/) — ⭐ 2,831
+- [claude-trading-skills](/claude-skill/claude-trading-skills/) — ⭐ 2,789
+- [claude-vision-skill](/claude-skill/claude-vision-skill/) — ⭐ 2,274
+- [claudekit-skills](/claude-skill/claudekit-skills/) — ⭐ 2,211
+- [claude-blog](/claude-skill/claude-blog/) — ⭐ 2,084
+- [claude-skills-llm-council](/claude-skill/claude-skills-llm-council/) — ⭐ 1,855
+- [vox-director](/claude-skill/vox-director/) — ⭐ 1,785
+- [claude-skill-aso-appstore-screenshots](/claude-skill/claude-skill-aso-appstore-screenshots/) — ⭐ 1,715
+- [gpt-image2-ppt-skills](/claude-skill/gpt-image2-ppt-skills/) — ⭐ 1,253
+- [claude-skill-app-onboarding-questionnaire](/claude-skill/claude-skill-app-onboarding-questionnaire/) — ⭐ 1,194
+- [webgpu-claude-skill](/claude-skill/webgpu-claude-skill/) — ⭐ 1,184
+- [claude-skills-collection](/claude-skill/claude-skills-collection/) — ⭐ 1,059
+- [ELI5](/claude-skill/eli5/) — ⭐ 941
+- [Agentic-SEO-Skill](/claude-skill/agentic-seo-skill/) — ⭐ 890
+- [Claude-Skills-Governance-Risk-and-Compliance](/claude-skill/claude-skills-governance-risk-and-compliance/) — ⭐ 883
+- [claude-skills](/claude-skill/claude-skills/) — ⭐ 826
+- [claude-code-skills-zh](/claude-skill/claude-code-skills-zh/) — ⭐ 822
+- [draw-your-font](/claude-skill/draw-your-font/) — ⭐ 757
+- [web-design](/claude-skill/web-design/) — ⭐ 752
+- [Claude-Skills](/claude-skill/claude-skills/) — ⭐ 717
+- [claude-code-apple-skills](/claude-skill/claude-code-apple-skills/) — ⭐ 708
+- [claude-skill-social-post](/claude-skill/claude-skill-social-post/) — ⭐ 661
+- [claude-skill-registry](/claude-skill/claude-skill-registry/) — ⭐ 595
+- [compose-skill](/claude-skill/compose-skill/) — ⭐ 578
+- [claude-code-skills](/claude-skill/claude-code-skills/) — ⭐ 558
+- [superdesign-skill](/claude-skill/superdesign-skill/) — ⭐ 518
+- [claude-code-bmad-skills](/claude-skill/claude-code-bmad-skills/) — ⭐ 485
+- [csv-data-summarizer-claude-skill](/claude-skill/csv-data-summarizer-claude-skill/) — ⭐ 464
+- [notebooklm-skill](/claude-skill/notebooklm-skill/) — ⭐ 454
+- [ai-labs-claude-skills](/claude-skill/ai-labs-claude-skills/) — ⭐ 445
+- [claude-code-skill-scrapling](/claude-skill/claude-code-skill-scrapling/) — ⭐ 407
+- [ordinary-claude-skills](/claude-skill/ordinary-claude-skills/) — ⭐ 393
+- [claude-skills-journalism](/claude-skill/claude-skills-journalism/) — ⭐ 387
+- [visual-style-ppt-skill](/claude-skill/visual-style-ppt-skill/) — ⭐ 384
+- [claude-code_rails-upgrade-skill](/claude-skill/claude-code-rails-upgrade-skill/) — ⭐ 382
+- [ir-search](/claude-skill/ir-search/) — ⭐ 375
+- [guizang-yingzao-skill](/claude-skill/guizang-yingzao-skill/) — ⭐ 368
+- [proficiently-claude-skills](/claude-skill/proficiently-claude-skills/) — ⭐ 367
+- [travel-plan-viz](/claude-skill/travel-plan-viz/) — ⭐ 363
+- [reddit-research-skills](/claude-skill/reddit-research-skills/) — ⭐ 347
+- [claude-skillz](/claude-skill/claude-skillz/) — ⭐ 344
+- [claude-android-skill](/claude-skill/claude-android-skill/) — ⭐ 324
+- [math-modeling-skills](/claude-skill/math-modeling-skills/) — ⭐ 320
+- [awesome-claude-skills](/claude-skill/awesome-claude-skills/) — ⭐ 316
+- [tufte-claude-skill](/claude-skill/tufte-claude-skill/) — ⭐ 299
+- [google-ai-mode-skill](/claude-skill/google-ai-mode-skill/) — ⭐ 295
+- [ielts-claude-skills](/claude-skill/ielts-claude-skills/) — ⭐ 294
+- [claude-skills](/claude-skill/claude-skills/) — ⭐ 287
+- [universal-examprep-skill](/claude-skill/universal-examprep-skill/) — ⭐ 281
+- [Mck-ppt-design-skill](/claude-skill/mck-ppt-design-skill/) — ⭐ 270
+- [OnlyShot](/claude-skill/onlyshot/) — ⭐ 269
+- [claude-skills](/claude-skill/claude-skills/) — ⭐ 268
+- [spring-boot-skills](/claude-skill/spring-boot-skills/) — ⭐ 258
+- [Bloom](/claude-skill/bloom/) — ⭐ 252
+- [claude-d3js-skill](/claude-skill/claude-d3js-skill/) — ⭐ 229
+- [claude-wordpress-skills](/claude-skill/claude-wordpress-skills/) — ⭐ 227
+- [humanizer-skill](/claude-skill/humanizer-skill/) — ⭐ 218
+- [claude-skills-guide](/claude-skill/claude-skills-guide/) — ⭐ 217
+- [claude-skills](/claude-skill/claude-skills/) — ⭐ 215
+- [some_claude_skills](/claude-skill/some-claude-skills/) — ⭐ 213
+- [claude-skills](/claude-skill/claude-skills/) — ⭐ 211
+- [Claude-skills-for-Computational-Designers](/claude-skill/claude-skills-for-computational-designers/) — ⭐ 210
+- [docx-cli](/claude-skill/docx-cli/) — ⭐ 196
