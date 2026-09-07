@@ -12,7 +12,7 @@ export default function Footer() {
           👑 <strong>LORD OF CLAUDE</strong> — The premier directory for verified MCP servers, Claude skills, and breaking AI news.
         </p>
         <p>
-          Updated regularly. Verified before publishing. Zero manual effort.
+          Updated daily. Rigorously vetted for Claude, Anthropic & MCP developers.
         </p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginTop: 20, fontSize: 12 }}>
           <a href="/mcp-servers/" style={{ color: 'var(--text-secondary)' }}>MCP Servers</a>
