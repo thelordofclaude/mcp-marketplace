@@ -33,21 +33,14 @@ export default function NewsArticlePage({ params }) {
         {article.title}
       </h1>
 
-      <div style={{ display: 'flex', gap: 16, fontSize: 13, color: 'var(--text-muted)', marginBottom: 32, paddingBottom: 24, borderBottom: '1px solid var(--border)' }}>
+      <div style={{ display: 'flex', gap: 16, alignItems: 'center', fontSize: 13, color: 'var(--text-muted)', marginBottom: 32, paddingBottom: 24, borderBottom: '1px solid var(--border)' }}>
         <span>📅 {article.published_at || 'Recently'}</span>
-        <span>📰 {article.source || 'ClaudeHub'}</span>
-        {article.manual && <span style={{ color: 'var(--accent)' }}>✍️ Manually submitted</span>}
+        <span style={{ background: 'rgba(147, 51, 234, 0.1)', color: '#9333ea', padding: '2px 8px', borderRadius: 12, fontWeight: 500 }}>
+          {article.category || 'AI & Technology'}
+        </span>
       </div>
 
       <div className="markdown-content" dangerouslySetInnerHTML={{ __html: article.content?.replace(/\n/g, '<br>') || '' }} />
-
-      {article.source_url && (
-        <div style={{ marginTop: 32, padding: 16, background: 'var(--surface)', borderRadius: 8 }}>
-          <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-            Original source: <a href={article.source_url} target="_blank" style={{ color: 'var(--accent)' }}>{article.source_url}</a>
-          </p>
-        </div>
-      )}
 
       <div style={{ marginTop: 32 }}>
         <Link href="/news/" style={{ color: 'var(--accent)', fontWeight: 600 }}>
