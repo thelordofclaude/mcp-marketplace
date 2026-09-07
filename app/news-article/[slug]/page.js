@@ -2,15 +2,15 @@ import { notFound } from 'next/navigation'
 import { getContentItem, getAllSlugs } from '../../../lib/content'
 import Link from 'next/link'
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   const slugs = getAllSlugs('news') || []
   return slugs.map((slug) => ({
     slug: typeof slug === 'string' ? slug : slug.slug,
   }))
 }
 
-export default async function NewsArticlePage({ params }) {
-  const { slug } = await params
+export default function NewsArticlePage({ params }) {
+  const slug = params?.slug
   const article = getContentItem('news', slug)
 
   if (!article) return notFound()
