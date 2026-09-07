@@ -1,29 +1,27 @@
 #!/usr/bin/env python3
 """
 Auto AI News Publisher
-Fetches from top AI news RSS feeds, rewrites articles, generates images,
-and publishes to the website. Scales: 1/day → 2/day → 3/day.
+Fetches from top AI news RSS feeds, rewrites articles, generates comic-editorial images,
+and publishes to the website.
 """
 import json, os, re, time, random, urllib.parse
 from urllib.request import Request, urlopen
-from datetime import datetime, timedelta
+from datetime import datetime
 from xml.etree import ElementTree as ET
 
 PROCESSED = "processed-news.json"
 CONTENT = "content/news"
 os.makedirs(CONTENT, exist_ok=True)
 
-# Scale schedule: Month 1 = 1/day, Month 2-3 = 2/day, Month 4+ = 3/day
-START_DATE = datetime(2026, 9, 1)  # Adjust to your launch date
+START_DATE = datetime(2026, 9, 1)
 days_since_start = (datetime.now() - START_DATE).days
 if days_since_start < 30:
     TARGET_PER_RUN = 1
 elif days_since_start < 90:
-    TARGET_PER_RUN = 1  # Script runs twice daily (8am + 6pm) = 2/day
+    TARGET_PER_RUN = 1
 else:
-    TARGET_PER_RUN = 1  # Script runs 3 times daily = 3/day
+    TARGET_PER_RUN = 1
 
-# Top AI News RSS Feeds
 RSS_FEEDS = [
     "https://techcrunch.com/category/artificial-intelligence/feed/",
     "https://www.theverge.com/ai-artificial-intelligence/rss/index.xml",
@@ -47,6 +45,13 @@ RSS_FEEDS = [
     "https://blog.huggingface.co/rss",
 ]
 
+# AI Strict Keyword Filter
+AI_KEYWORDS = [
+    'ai', 'artificial intelligence', 'llm', 'claude', 'gpt', 'openai', 
+    'anthropic', 'mcp', 'neural', 'machine learning', 'deep learning', 
+    'generative ai', 'transformer', 'agentic'
+]
+
 def load_processed():
     if os.path.exists(PROCESSED):
         with open(PROCESSED) as f: return json.load(f)
@@ -56,8 +61,13 @@ def save_processed(p):
     p["last_run"] = datetime.now().isoformat()
     with open(PROCESSED, "w") as f: json.dump(p, f, indent=2)
 
+def is_ai_topic(title, description):
+    """Check if the article is strictly about AI."""
+    text = f"{title} {description}".lower()
+    return any(re.search(rf'\b{re.escape(k)}\b', text) for k in AI_KEYWORDS)
+
 def fetch_rss(url):
-    """Fetch and parse RSS feed."""
+    """Fetch and parse RSS feed with strict AI filtering."""
     try:
         req = Request(url, headers={"User-Agent": "ClaudeHub-NewsBot/1.0"})
         with urlopen(req, timeout=20) as r:
@@ -71,46 +81,49 @@ def fetch_rss(url):
                 desc = item.findtext('description', '') or item.findtext('summary', '') or ''
                 pub_date = item.findtext('pubDate', '')
                 guid = item.findtext('guid', '') or link
+                clean_desc = re.sub(r'<[^>]+>', '', desc).strip()[:500]
 
-                if title and link and len(title) > 15:
+                # Filter out non-AI articles
+                if title and link and len(title) > 15 and is_ai_topic(title, clean_desc):
                     items.append({
                         "id": hash(guid) % (10**12),
                         "title": title,
                         "link": link,
-                        "description": re.sub(r'<[^>]+>', '', desc).strip()[:500],
+                        "description": clean_desc,
                         "pub_date": pub_date,
                         "source": url.split('/')[2].replace('www.', '')
                     })
             return items
     except Exception as e:
-        print(f"   RSS error ({url[:40]}...): {e}")
+        print(f"    RSS error ({url[:40]}...): {e}")
         return []
 
-def rewrite_article(title, description, source):
-    """
-    Rewrite the article headline and summary.
-    If OpenAI/Anthropic API key available, uses LLM.
-    Otherwise, does basic paraphrasing.
-    """
+def rewrite_article(title, description):
     openai_key = os.environ.get("OPENAI_API_KEY", "")
     anthropic_key = os.environ.get("ANTHROPIC_API_KEY", "")
 
     if openai_key:
-        return rewrite_with_openai(title, description, source, openai_key)
+        return rewrite_with_openai(title, description, openai_key)
     elif anthropic_key:
-        return rewrite_with_anthropic(title, description, source, anthropic_key)
+        return rewrite_with_anthropic(title, description, anthropic_key)
     else:
-        return rewrite_basic(title, description, source)
+        return rewrite_basic(title, description)
 
-def rewrite_with_openai(title, desc, source, key):
-    """Use GPT-4 to humanize and rewrite."""
+def rewrite_with_openai(title, desc, key):
     try:
         import urllib.request
+        prompt = (
+            "You are a senior tech journalist writing an authoritative editorial piece. "
+            "Rewrite the headline and summary into a humanized, detailed, and punchy news article. "
+            "DO NOT include any disclaimers, bot signatures, original source links, or markdown sections like '## Source'. "
+            "Keep headline under 70 characters and summary under 200 words. "
+            "Return ONLY a JSON object with 'headline' and 'summary' keys."
+        )
         data = json.dumps({
             "model": "gpt-4o-mini",
             "messages": [
-                {"role": "system", "content": "You are a tech news editor. Rewrite the given AI news headline and summary to be punchy, engaging, and SEO-friendly. Keep the headline under 70 characters. Keep the summary under 200 words. Maintain factual accuracy. Add relevant keywords like 'AI', 'Claude', 'MCP', 'LLM' where natural."},
-                {"role": "user", "content": f"Source: {source}\nOriginal headline: {title}\nOriginal summary: {desc}\n\nRewrite both. Return ONLY a JSON object with 'headline' and 'summary' keys."}
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": f"Headline: {title}\nSummary: {desc}"}
             ],
             "temperature": 0.7,
             "max_tokens": 500
@@ -125,24 +138,28 @@ def rewrite_with_openai(title, desc, source, key):
         with urllib.request.urlopen(req, timeout=30) as r:
             result = json.loads(r.read().decode())
             content = result["choices"][0]["message"]["content"]
-            # Extract JSON from response
             match = re.search(r'\{[^}]*"headline"[^}]*"summary"[^}]*\}', content, re.DOTALL)
             if match:
                 parsed = json.loads(match.group())
                 return parsed.get("headline", title), parsed.get("summary", desc)
     except Exception as e:
-        print(f"   OpenAI rewrite failed: {e}")
-    return rewrite_basic(title, desc, source)
+        print(f"    OpenAI rewrite failed: {e}")
+    return rewrite_basic(title, desc)
 
-def rewrite_with_anthropic(title, desc, source, key):
-    """Use Claude to humanize and rewrite."""
+def rewrite_with_anthropic(title, desc, key):
     try:
         import urllib.request
+        prompt = (
+            "You are a senior tech editor. Rewrite this AI news into a humanized, engaging editorial summary. "
+            "DO NOT include any source links, disclaimers, bot signatures, or '## Source' headers. "
+            "Keep headline under 70 chars, summary under 200 words. "
+            "Return ONLY JSON with 'headline' and 'summary' keys."
+        )
         data = json.dumps({
             "model": "claude-3-haiku-20240307",
             "max_tokens": 500,
             "messages": [
-                {"role": "user", "content": f"Rewrite this AI news headline and summary to be punchy and SEO-friendly. Keep headline under 70 chars. Summary under 200 words. Return ONLY JSON with 'headline' and 'summary' keys.\n\nSource: {source}\nHeadline: {title}\nSummary: {desc}"}
+                {"role": "user", "content": f"{prompt}\n\nHeadline: {title}\nSummary: {desc}"}
             ]
         }).encode()
 
@@ -160,46 +177,38 @@ def rewrite_with_anthropic(title, desc, source, key):
                 parsed = json.loads(match.group())
                 return parsed.get("headline", title), parsed.get("summary", desc)
     except Exception as e:
-        print(f"   Anthropic rewrite failed: {e}")
-    return rewrite_basic(title, desc, source)
+        print(f"    Anthropic rewrite failed: {e}")
+    return rewrite_basic(title, desc)
 
-def rewrite_basic(title, desc, source):
-    """Basic paraphrasing without API keys."""
-    # Simple transformations
+def rewrite_basic(title, desc):
     new_title = title
-    replacements = {
-        "announces": "reveals",
-        "launches": "unveils",
-        "introduces": "debuts",
-        "new": "latest",
-        "update": "upgrade",
-    }
+    replacements = {"announces": "reveals", "launches": "unveils", "introduces": "debuts", "new": "latest", "update": "upgrade"}
     for old, new in replacements.items():
         new_title = re.sub(rf'\b{old}\b', new, new_title, flags=re.IGNORECASE)
 
-    # Add context if missing
     if "AI" not in new_title and "artificial intelligence" not in new_title.lower():
-        new_title = f"AI Update: {new_title}"
+        new_title = f"AI News: {new_title}"
     if len(new_title) > 70:
         new_title = new_title[:67].rsplit(" ", 1)[0] + "..."
 
-    # Enhance description
     new_desc = desc
     if len(new_desc) < 100:
-        new_desc += f" This development from {source} highlights the rapid evolution of artificial intelligence tools and their impact on developers and businesses."
+        new_desc += " This development highlights the rapid evolution of artificial intelligence tools and their impact on developers and modern tech workflows."
 
     return new_title, new_desc
 
 def generate_image(title):
-    """Generate image using Pollinations.ai (free, no API key)."""
-    prompt = f"Tech news illustration about: {title}. Modern, clean, futuristic, digital art, no text, professional blog header image."
-    encoded = urllib.parse.quote(prompt)
+    """Generate modern Verge-style comic editorial art via Pollinations."""
+    style_prompt = (
+        f"The Verge editorial illustration, graphic novel comic book art style, "
+        f"vibrant pop art colors, bold lines, retro-futuristic concept art about {title}"
+    )
+    encoded = urllib.parse.quote(style_prompt)
     return f"https://image.pollinations.ai/prompt/{encoded}?width=800&height=450&nologo=true&seed={random.randint(1, 10000)}"
 
 def generate_page(article, index):
-    headline, summary = rewrite_article(article["title"], article["description"], article["source"])
+    headline, summary = rewrite_article(article["title"], article["description"])
     slug = re.sub(r'[^a-z0-9]+', '-', headline.lower()).strip('-')[:60]
-    # Ensure unique slug
     slug = f"{slug}-{index}"
 
     image_url = generate_image(headline)
@@ -218,36 +227,28 @@ def generate_page(article, index):
         "datePublished": today,
         "dateModified": today,
         "author": {"@type": "Organization", "name": "ClaudeHub"},
-        "publisher": {"@type": "Organization", "name": "ClaudeHub", "logo": {"@type": "ImageObject", "url": "https://yourdomain.com/logo.png"}}
+        "publisher": {"@type": "Organization", "name": "ClaudeHub"}
     }
 
-    body = f"""## Summary
+    # Clean humanized editorial format
+    body = f"""## Overview
 
 {summary}
 
 ## Key Takeaways
 
 - {headline.split(':')[-1].strip() if ':' in headline else headline}
-- This development impacts AI developers, researchers, and businesses adopting AI tools.
-- Stay updated with ClaudeHub for the latest in AI infrastructure, MCP servers, and Claude ecosystem news.
-
-## Source
-
-Original story from [{article['source']}]({article['link']}).
-
----
-
-*Published on {today} by ClaudeHub AI News Bot. This article was auto-curated and rewritten for clarity and SEO optimization.*
+- Significant impact across AI development, LLM infrastructure, and modern developer tooling.
+- Crucial updates for teams building next-generation AI agents and automation tools.
 """
 
     md = f"""---
 slug: {slug}
 title: "{headline}"
 meta_description: "{meta_desc}"
-keywords: "AI news, artificial intelligence, {article['source']}, Claude, MCP, LLM, tech news"
+keywords: "AI news, Artificial Intelligence, LLMs, Machine Learning, Tech Insights"
 type: news
-source: {article['source']}
-source_url: {article['link']}
+category: "AI & Technology"
 image: {image_url}
 published_at: {today}
 schema_json: |
@@ -264,31 +265,28 @@ schema_json: |
 
 def main():
     print("=" * 55)
-    print("  AUTO AI NEWS PUBLISHER")
+    print("   AUTO AI NEWS PUBLISHER")
     print("=" * 55)
 
     proc = load_processed()
     done = set(proc["ids"])
 
-    # Check daily limit
     today_str = datetime.now().strftime("%Y-%m-%d")
     if proc.get("today_date") != today_str:
         proc["today_count"] = 0
         proc["today_date"] = today_str
 
-    # Determine how many to publish this run
     daily_limit = 1 if days_since_start < 30 else (2 if days_since_start < 90 else 3)
     remaining_today = daily_limit - proc.get("today_count", 0)
     target = min(TARGET_PER_RUN, remaining_today)
 
     if target <= 0:
-        print(f"   Daily limit ({daily_limit}) reached for today. Skipping.")
+        print(f"    Daily limit ({daily_limit}) reached for today. Skipping.")
         save_processed(proc)
         return
 
     print(f"📰 Target: {target} articles (daily limit: {daily_limit}, already today: {proc.get('today_count', 0)})")
 
-    # Fetch from RSS feeds
     all_articles = []
     for feed in RSS_FEEDS:
         articles = fetch_rss(feed)
@@ -299,14 +297,13 @@ def main():
         if len(all_articles) >= target * 3:
             break
 
-    print(f"   Fetched {len(all_articles)} new articles from RSS feeds")
+    print(f"    Fetched {len(all_articles)} AI-specific articles")
 
     if not all_articles:
-        print("   No new articles found.")
+        print("    No new AI articles found.")
         save_processed(proc)
         return
 
-    # Shuffle and pick top ones
     random.shuffle(all_articles)
     selected = all_articles[:target]
 
@@ -318,12 +315,12 @@ def main():
         proc["slugs"].append(slug)
         proc["total"] = len(proc["ids"])
         proc["today_count"] = proc.get("today_count", 0) + 1
-        print(f"   ✅ Published: {slug[:50]}...")
+        print(f"    ✅ Published: {slug[:50]}...")
         time.sleep(1)
 
     save_processed(proc)
     print(f"\n💾 Total articles: {proc['total']}")
-    print(f"   Published today: {proc['today_count']}/{daily_limit}")
+    print(f"    Published today: {proc['today_count']}/{daily_limit}")
     print("✅ DONE")
 
 if __name__ == "__main__":
