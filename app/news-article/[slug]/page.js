@@ -3,14 +3,30 @@ import { getContentItem, getAllSlugs } from '../../../lib/content'
 import Link from 'next/link'
 
 export function generateStaticParams() {
-  const slugs = getAllSlugs('news') || []
-  return slugs.map((slug) => ({
-    slug: typeof slug === 'string' ? slug : slug.slug,
-  }))
+  try {
+    const slugs = getAllSlugs('news') || []
+    const mapped = slugs.map((slug) => ({
+      slug: typeof slug === 'string' ? slug : slug?.slug || String(slug),
+    }))
+
+    // Next.js static export requires at least one param to build.
+    if (mapped.length === 0) {
+      return [{ slug: 'default' }]
+    }
+
+    return mapped
+  } catch (error) {
+    return [{ slug: 'default' }]
+  }
 }
 
 export default function NewsArticlePage({ params }) {
   const slug = params?.slug
+  
+  if (!slug || slug === 'default') {
+    return notFound()
+  }
+
   const article = getContentItem('news', slug)
 
   if (!article) return notFound()
