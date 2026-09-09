@@ -62,6 +62,39 @@ REPORTERS = [
     }
 ]
 
+# ─── 20 REALISTIC COMMENTER PROFILES ─────────────────────────────────────────
+COMMENTERS = [
+    {"name": "Alex Rivera", "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face", "handle": "@alexrivera_ai"},
+    {"name": "Sarah Jenkins", "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face", "handle": "@sjenkins_tech"},
+    {"name": "David Wu", "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face", "handle": "@dwu_dev"},
+    {"name": "Elena Rostova", "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face", "handle": "@elena_ai"},
+    {"name": "Michael Chang", "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face", "handle": "@mchang_gpu"},
+    {"name": "Jessica Taylor", "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face", "handle": "@jtaylor_ml"},
+    {"name": "Liam Thorne", "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face", "handle": "@lthorne_code"},
+    {"name": "Amara Diallo", "avatar": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&h=100&fit=crop&crop=face", "handle": "@amara_data"},
+    {"name": "Lucas Meyer", "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=face", "handle": "@lmeyer_systems"},
+    {"name": "Nina Patel", "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face", "handle": "@ninapatel_ai"},
+    {"name": "Carlos Gomez", "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face", "handle": "@cgomez_tech"},
+    {"name": "Emily Watson", "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face", "handle": "@ewatson_research"},
+    {"name": "Tariq Mansour", "avatar": "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=100&h=100&fit=crop&crop=face", "handle": "@tariq_m"},
+    {"name": "Chloe Bennett", "avatar": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&h=100&fit=crop&crop=face", "handle": "@chloe_design"},
+    {"name": "Siddharth Rao", "avatar": "https://images.unsplash.com/photo-1513956589380-bad6acb9b9d4?w=100&h=100&fit=crop&crop=face", "handle": "@sidrao_mcp"},
+    {"name": "Hannah Abbott", "avatar": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=100&h=100&fit=crop&crop=face", "handle": "@habbott_cloud"},
+    {"name": "Vikram Malhotra", "avatar": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&h=100&fit=crop&crop=face", "handle": "@vmalhotra_ai"},
+    {"name": "Rachel Vance", "avatar": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&h=100&fit=crop&crop=face", "handle": "@rvance_sec"},
+    {"name": "Daniel Park", "avatar": "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=100&h=100&fit=crop&crop=face", "handle": "@dpark_infra"},
+    {"name": "Sophie Martin", "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face", "handle": "@smartin_eth"}
+]
+
+COMMENT_TEMPLATES = [
+    "The rate at which these tools are evolving is incredible. Curious to see how this impacts production deployments next quarter.",
+    "Solid breakdown. The architectural implications here are huge, especially for teams working on agentic workflows.",
+    "This aligns with what we've been seeing in production. The latency benchmarks will be the real test.",
+    "Very timely piece! Hope to see a follow-up once more benchmark data becomes publicly available.",
+    "Great analysis. The integration complexity seems lower than expected, which could accelerate enterprise adoption.",
+    "Interesting perspective. I wonder how this impacts existing open-source alternatives over the next few months."
+]
+
 SEO_TAGS = [
     "ChatGPT & OpenAI", "Claude & Anthropic", "Cursor & AI Coding",
     "Hugging Face & Open Source", "Frontier Models", "AI Agents & Workflows",
@@ -218,35 +251,158 @@ def rewrite_fallback(title, desc, reporter):
     )
     return headline, dek, body
 
-def comments_section_html():
-    return """
-<div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
-  <h3 style="font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 16px;">Reader Discussion</h3>
-  <form onsubmit="event.preventDefault(); postComment(this);" style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin-bottom: 20px;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 12px;">
-      <input type="text" name="name" placeholder="Your name" required style="border: 1px solid #d1d5db; border-radius: 6px; padding: 10px; font-size: 14px; width: 100%;">
-      <input type="email" name="email" placeholder="Email address" required style="border: 1px solid #d1d5db; border-radius: 6px; padding: 10px; font-size: 14px; width: 100%;">
-      <input type="text" name="xhandle" placeholder="X (@username)" style="border: 1px solid #d1d5db; border-radius: 6px; padding: 10px; font-size: 14px; width: 100%;">
+# ─── AUTOMATED COMMENT GENERATOR ─────────────────────────────────────────────
+
+def generate_auto_comments(num_comments):
+    selected_users = random.sample(COMMENTERS, num_comments)
+    comments_html = ""
+    
+    for u in selected_users:
+        text = random.choice(COMMENT_TEMPLATES)
+        claps = random.randint(12, 185)
+        replies_count = random.randint(0, 3)
+        reply_label = f" · {replies_count} replies" if replies_count > 0 else ""
+        
+        comments_html += f"""
+        <div style="padding: 16px 0; border-bottom: 1px solid #f3f4f6;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <img src="{u['avatar']}" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
+              <div>
+                <div style="font-weight: 600; font-size: 14px; color: #111827;">{u['name']}</div>
+                <div style="font-size: 12px; color: #6b7280;">Today {reply_label}</div>
+              </div>
+            </div>
+            <button style="background: none; border: none; cursor: pointer; color: #9ca3af; font-size: 18px;">···</button>
+          </div>
+          <p style="font-size: 14px; line-height: 1.5; color: #374151; margin: 0 0 10px 0;">{text}</p>
+          <div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #6b7280;">
+            <button onclick="this.querySelector('span').innerText = parseInt(this.querySelector('span').innerText) + 1" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; color: #6b7280; font-size: 13px; padding: 0;">
+              👏 <span>{claps}</span>
+            </button>
+            <button style="background: none; border: none; cursor: pointer; color: #6b7280; font-size: 13px; padding: 0;">Reply</button>
+          </div>
+        </div>
+        """
+    return comments_html
+
+def comments_section_html(num_auto_comments):
+    auto_comments_markup = generate_auto_comments(num_auto_comments)
+    total_count = num_auto_comments
+    
+    return f"""
+<div style="margin-top: 48px; padding-top: 32px; border-top: 1px solid #e5e7eb; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <h3 style="font-size: 22px; font-weight: 700; color: #111827; margin: 0;">Responses ({total_count})</h3>
+  </div>
+
+  <!-- SIGN IN TO COMMENT TRIGGER -->
+  <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+      <div style="width: 36px; height: 36px; border-radius: 50%; background: #f3f4f6; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 18px;">👤</div>
+      <input type="text" onclick="openAuthModal()" readonly placeholder="What are your thoughts?" style="width: 100%; border: none; background: #f9fafb; padding: 10px 14px; border-radius: 8px; font-size: 14px; color: #4b5563; cursor: pointer;">
     </div>
-    <textarea name="text" placeholder="Share your thoughts on this story..." required style="border: 1px solid #d1d5db; border-radius: 6px; padding: 10px; font-size: 14px; width: 100%; min-height: 80px; margin-bottom: 12px;"></textarea>
-    <button type="submit" style="background: #2563eb; color: #ffffff; font-weight: 600; padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer;">Post Comment</button>
-  </form>
-  <div id="comments-list"></div>
-  <script>
-    function postComment(form) {
-      const fd = new FormData(form);
-      const list = document.getElementById('comments-list');
-      const item = document.createElement('div');
-      item.style.cssText = 'background: #ffffff; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb; margin-bottom: 12px;';
-      item.innerHTML = '<strong>' + fd.get('name') + '</strong> <span style="color:#6b7280; font-size:12px;">(' + (fd.get('xhandle') || 'Anonymous') + ')</span><p style="margin-top:6px; color:#374151;">' + fd.get('text') + '</p>';
-      list.prepend(item);
-      form.reset();
-    }
-  </script>
+    <div style="display: flex; justify-content: flex-end;">
+      <button onclick="openAuthModal()" style="background: #2563eb; color: #ffffff; font-weight: 600; font-size: 14px; padding: 8px 18px; border-radius: 20px; border: none; cursor: pointer; transition: background 0.2s;">Sign in to Comment</button>
+    </div>
+  </div>
+
+  <!-- AUTOMATED REAL COMMENTS -->
+  <div id="comments-list">
+    {auto_comments_markup}
+  </div>
 </div>
+
+<!-- MEDIUM-STYLE SOCIAL LOGIN MODAL -->
+<div id="authModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center;">
+  <div style="background: #ffffff; border-radius: 16px; width: 100%; max-width: 400px; padding: 28px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; font-family: sans-serif;">
+    <button onclick="closeAuthModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: #9ca3af;">✕</button>
+    
+    <h3 style="font-size: 20px; font-weight: 700; text-align: center; color: #111827; margin-top: 0; margin-bottom: 8px;">Sign in to join discussion</h3>
+    <p style="font-size: 13px; color: #6b7280; text-align: center; margin-bottom: 24px;">Mandatory email registration for community features & daily AI insights.</p>
+
+    <form onsubmit="handleAuthSubmit(event)" style="display: flex; flex-direction: column; gap: 12px;">
+      <input type="text" id="authName" placeholder="Full Name" required style="border: 1px solid #d1d5db; border-radius: 8px; padding: 10px 12px; font-size: 14px; width: 100%; box-sizing: border-box;">
+      <input type="email" id="authEmail" placeholder="Email Address (Mandatory)" required style="border: 1px solid #d1d5db; border-radius: 8px; padding: 10px 12px; font-size: 14px; width: 100%; box-sizing: border-box;">
+      <input type="text" id="authX" placeholder="X / Twitter (@username)" style="border: 1px solid #d1d5db; border-radius: 8px; padding: 10px 12px; font-size: 14px; width: 100%; box-sizing: border-box;">
+      
+      <button type="submit" style="background: #2563eb; color: #ffffff; font-weight: 600; padding: 11px; border-radius: 8px; border: none; cursor: pointer; margin-top: 4px; font-size: 14px;">Continue with Email</button>
+    </form>
+
+    <div style="display: flex; align-items: center; margin: 20px 0; color: #9ca3af; font-size: 12px;">
+      <div style="flex: 1; border-bottom: 1px solid #e5e7eb;"></div>
+      <span style="padding: 0 10px;">OR SINGLE SIGN-ON</span>
+      <div style="flex: 1; border-bottom: 1px solid #e5e7eb;"></div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <button onclick="socialLogin('Google')" style="background: #ffffff; border: 1px solid #d1d5db; border-radius: 8px; padding: 9px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #374151;">
+        <span>🌐</span> Continue with Google (Gmail)
+      </button>
+      <button onclick="socialLogin('X')" style="background: #000000; color: #ffffff; border: none; border-radius: 8px; padding: 9px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <span>𝕏</span> Continue with X.com
+      </button>
+      <button onclick="socialLogin('Facebook')" style="background: #1877f2; color: #ffffff; border: none; border-radius: 8px; padding: 9px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <span>f</span> Continue with Facebook
+      </button>
+      <button onclick="socialLogin('Instagram')" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #ffffff; border: none; border-radius: 8px; padding: 9px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <span>📸</span> Continue with Instagram
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openAuthModal() {{
+    document.getElementById('authModal').style.display = 'flex';
+  }}
+  function closeAuthModal() {{
+    document.getElementById('authModal').style.display = 'none';
+  }}
+  function socialLogin(provider) {{
+    const email = prompt('Enter mandatory email address for ' + provider + ' sign-in:');
+    if (email) {{
+      saveLead('Social User', email, '@' + provider.toLowerCase(), provider, provider + '_id_' + Math.floor(Math.random() * 1000000));
+      alert('Successfully authenticated via ' + provider + '! You can now post comments.');
+      closeAuthModal();
+    }}
+  }}
+  function handleAuthSubmit(e) {{
+    e.preventDefault();
+    const name = document.getElementById('authName').value;
+    const email = document.getElementById('authEmail').value;
+    const xhandle = document.getElementById('authX').value;
+    saveLead(name, email, xhandle, 'Email', xhandle || 'N/A');
+    alert('Thank you! Your profile has been saved.');
+    closeAuthModal();
+  }}
+  function saveLead(name, email, xhandle, provider, socialId) {{
+    const user = {{
+      userId: 'usr_' + Math.random().toString(36).substr(2, 9),
+      name: name,
+      email: email,
+      provider: provider || 'Email',
+      socialId: socialId || xhandle || 'N/A',
+      createdAt: new Date().toISOString()
+    }};
+    let users = JSON.parse(localStorage.getItem('news_leads') || '[]');
+    users.push(user);
+    localStorage.setItem('news_leads', JSON.stringify(users));
+    
+    // Optional: send to backend endpoint if available
+    fetch('/api/users/register', {{
+      method: 'POST',
+      headers: {{ 'Content-Type': 'application/json' }},
+      body: JSON.stringify(user)
+    }}).catch(err => console.log('Saved locally'));
+  }}
+</script>
 """
 
 def generate_page(article, index):
+    # Alternates between 1 and 2 auto comments per article
+    num_auto_comments = 1 if (index % 2 == 0) else 2
+
     reporter = assign_reporter(article["title"], article["description"])
     headline, dek, body = rewrite_fallback(article["title"], article["description"], reporter)
     tags = assign_seo_tags(article["title"], article["description"])
@@ -289,7 +445,7 @@ read_time: "{read_time}"
 
 {author_card_html}
 
-{comments_section_html()}
+{comments_section_html(num_auto_comments)}
 """
     return slug, md
 
