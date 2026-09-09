@@ -70,15 +70,22 @@ export default function Navbar() {
           <Link href="/advertise/" className="btn btn-outline" style={{ fontSize: 13, padding: '8px 16px' }}>
             📢 Advertise
           </Link>
-          <button className="btn btn-primary" style={{ fontSize: 13, padding: '8px 16px' }}>
+          <button 
+            onClick={() => window.openAuthModal && window.openAuthModal()} 
+            className="btn btn-primary" 
+            style={{ fontSize: 13, padding: '8px 16px', cursor: 'pointer' }}
+          >
             Sign In
           </button>
-          <div style={{
-            width: 36, height: 36, borderRadius: '50%',
-            background: 'var(--surface-hover)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 16,
-          }}>
+          <div 
+            onClick={() => window.openAuthModal && window.openAuthModal()} 
+            style={{
+              width: 36, height: 36, borderRadius: '50%',
+              background: 'var(--surface-hover)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 16, cursor: 'pointer'
+            }}
+          >
             👤
           </div>
         </div>
