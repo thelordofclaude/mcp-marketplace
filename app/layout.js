@@ -1,6 +1,7 @@
 import './globals.css'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import Script from 'next/script'
 
 export const metadata = {
   title: 'LORD OF CLAUDE — AI News, MCP Server & Claude Skill Directory',
@@ -46,6 +47,38 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        {/* Load Supabase JS Client library */}
+        <Script 
+          src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" 
+          strategy="beforeInteractive" 
+        />
+        {/* Initialize Supabase and global authentication helpers */}
+        <Script id="supabase-init" strategy="afterInteractive">
+          {`
+            const SUPABASE_URL = "https://mdcftnxmrbulxildgtgc.supabase.co/rest/v1/";
+            const SUPABASE_ANON_KEY = "sb_publishable_wwSmEishoqs6ELcNJj33Vg_FyPXonQ7";
+            
+            if (window.supabase) {
+              window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+
+            window.openAuthModal = function() {
+              const modal = document.getElementById('authModal') || document.getElementById('globalAuthModal');
+              if (modal) {
+                modal.style.display = 'flex';
+              }
+            };
+
+            window.closeAuthModal = function() {
+              const modal = document.getElementById('authModal') || document.getElementById('globalAuthModal');
+              if (modal) {
+                modal.style.display = 'none';
+              }
+            };
+          `}
+        </Script>
+      </head>
       <body>
         <Navbar />
         <main>{children}</main>
