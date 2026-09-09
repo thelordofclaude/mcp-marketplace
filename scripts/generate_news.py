@@ -487,9 +487,8 @@ def main():
         proc["today_count"] = 0
         proc["today_date"] = today_str
 
-    # Publishing cadence
-    days_since_start = (datetime.now() - datetime(2026, 9, 1)).days
-    daily_limit = 1 if days_since_start < 30 else (2 if days_since_start < 90 else 3)
+    # Daily cap set to 5 articles per day
+    daily_limit = 5
     remaining = daily_limit - proc.get("today_count", 0)
     target = min(1, remaining)  # 1 per run, respecting daily cap
 
