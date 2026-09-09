@@ -56,8 +56,8 @@ export default function RootLayout({ children }) {
         {/* Initialize Supabase and global authentication helpers */}
         <Script id="supabase-init" strategy="afterInteractive">
           {`
-            const SUPABASE_URL = "YOUR_SUPABASE_API_URL_HERE";
-            const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
+            const SUPABASE_URL = "https://mdcftnxmrbulxildgtgc.supabase.co/rest/v1/";
+            const SUPABASE_ANON_KEY = "sb_publishable_wwSmEishoqs6ELcNJj33Vg_FyPXonQ7";
             
             if (window.supabase) {
               window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
