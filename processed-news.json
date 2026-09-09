@@ -6,7 +6,8 @@
     882302638841,
     542585772191,
     622753691011,
-    429402624662
+    429402624662,
+    555234085429
   ],
   "slugs": [
     "ai-update-what-will-apple-s-john-ternus-era-look-like-0",
@@ -15,10 +16,11 @@
     "the-sameness-problem-behind-those-unappetizing-ai-generated--0",
     "another-swarm-of-openai-agents-reached-the-open-internet-wit-0",
     "meta-debuts-its-muse-ai-agent-will-consumers-trust-it-0",
-    "google-cloud-races-to-catch-up-in-the-ai-deployment-wars-wit-0"
+    "google-cloud-races-to-catch-up-in-the-ai-deployment-wars-wit-0",
+    "hackers-are-stealing-claude-tokens-from-subscribers-0"
   ],
-  "last_run": "2026-09-09T08:49:13.353144",
-  "total": 7,
-  "today_count": 3,
+  "last_run": "2026-09-09T12:41:51.015155",
+  "total": 8,
+  "today_count": 4,
   "today_date": "2026-09-09"
 }
