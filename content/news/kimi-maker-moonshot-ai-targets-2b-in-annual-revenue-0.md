@@ -1,8 +1,8 @@
 ---
 title: "Kimi-maker Moonshot AI targets $2B in annual revenue"
 description: "While K3's usage figures have declined slightly in recent months, OpenRouter data currently shows as many as 300 billion tokens being generated each..."
-image: "https://image.pollinations.ai/prompt/editorial%20illustration%20modern%20tech%20vector%20flat%20clean%20style%2C%20concept%20art%20about%20Kimi-maker%20Moonshot%20AI%20targets%20%242B%20in%20annual%20revenue?width=1200&height=630&nologo=true&seed=8025"
-date: "2026-09-12"
+image: "https://image.pollinations.ai/prompt/editorial%20illustration%20modern%20tech%20vector%20flat%20clean%20style%2C%20concept%20art%20about%20Kimi-maker%20Moonshot%20AI%20targets%20%242B%20in%20annual%20revenue?width=1200&height=630&nologo=true&seed=12195"
+date: "2026-09-13"
 category: "Frontier Models"
 author: "Marcus Chen"
 author_title: "Senior Tech Correspondent"
@@ -60,18 +60,18 @@ read_time: "3 min read"
         <div style="padding: 16px 0; border-bottom: 1px solid #f3f4f6;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
               <div>
-                <div style="font-weight: 600; font-size: 14px; color: #111827;">Sophie Martin</div>
-                <div style="font-size: 12px; color: #6b7280;">Today  · 3 replies</div>
+                <div style="font-weight: 600; font-size: 14px; color: #111827;">Jessica Taylor</div>
+                <div style="font-size: 12px; color: #6b7280;">Today  · 1 replies</div>
               </div>
             </div>
             <button style="background: none; border: none; cursor: pointer; color: #9ca3af; font-size: 18px;">···</button>
           </div>
-          <p style="font-size: 14px; line-height: 1.5; color: #374151; margin: 0 0 10px 0;">Great analysis. The integration complexity seems lower than expected, which could accelerate enterprise adoption.</p>
+          <p style="font-size: 14px; line-height: 1.5; color: #374151; margin: 0 0 10px 0;">The rate at which these tools are evolving is incredible. Curious to see how this impacts production deployments next quarter.</p>
           <div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #6b7280;">
             <button onclick="this.querySelector('span').innerText = parseInt(this.querySelector('span').innerText) + 1" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; color: #6b7280; font-size: 13px; padding: 0;">
-              👏 <span>163</span>
+              👏 <span>59</span>
             </button>
             <button style="background: none; border: none; cursor: pointer; color: #6b7280; font-size: 13px; padding: 0;">Reply</button>
           </div>
