@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Script from 'next/script'
 
 const newsItems = [
   {
@@ -81,37 +82,12 @@ export default function NewsGrid() {
 
         {/* Newsletter Sidebar */}
         <div style={{ width: 280, flexShrink: 0 }}>
-          <div className="card" style={{ padding: 24 }}>
-            <div style={{
-              width: 48, height: 48, borderRadius: 12,
-              background: 'var(--accent-light)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 24, marginBottom: 16,
-            }}>
-              📧
-            </div>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>
-              Stay Ahead in AI
-            </h3>
-            <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16 }}>
-              Get the best AI tools, tutorials & news in your inbox.
-            </p>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              style={{
-                width: '100%',
-                padding: '10px 14px',
-                borderRadius: 8,
-                border: '1px solid var(--border)',
-                fontSize: 13,
-                marginBottom: 10,
-                outline: 'none',
-              }}
+          <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+            <Script
+              src="https://lord-of-claude.kit.com/5f65768cbd/index.js"
+              data-uid="5f65768cbd"
+              strategy="lazyOnload"
             />
-            <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-              Subscribe
-            </button>
           </div>
         </div>
       </div>
