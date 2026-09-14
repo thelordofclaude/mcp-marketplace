@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import Link from 'next/link'
 
 const newsItems = [
@@ -37,19 +36,6 @@ const newsItems = [
 ]
 
 export default function NewsGrid() {
-  useEffect(() => {
-    // Load Kit script dynamically
-    const script = document.createElement('script')
-    script.src = 'https://lord-of-claude.kit.com/5f65768cbd/index.js'
-    script.async = true
-    script.setAttribute('data-uid', '5f65768cbd')
-    
-    const container = document.getElementById('kit-form-container')
-    if (container && !container.hasChildNodes()) {
-      container.appendChild(script)
-    }
-  }, [])
-
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px 40px', width: '100%' }}>
       <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
@@ -94,11 +80,111 @@ export default function NewsGrid() {
           </div>
         </div>
 
-        {/* Newsletter Sidebar */}
+        {/* Custom Newsletter Card (Styled exactly like image) */}
         <div style={{ width: 340, flexShrink: 0 }}>
-          <div className="card" style={{ padding: 16, borderRadius: 12, minHeight: 280 }}>
-            {/* Kit Script Render Target */}
-            <div id="kit-form-container" />
+          <div style={{
+            borderRadius: 12,
+            overflow: 'hidden',
+            backgroundColor: '#ffffff',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+            border: '1px solid #e2e8f0',
+          }}>
+            {/* Header Banner */}
+            <div style={{
+              backgroundColor: '#2cc9f8',
+              padding: '24px 20px',
+              textAlign: 'center',
+            }}>
+              <h2 style={{
+                color: '#ffffff',
+                fontSize: 26,
+                fontWeight: 800,
+                margin: 0,
+                letterSpacing: '-0.5px',
+              }}>
+                Join the Newsletter
+              </h2>
+            </div>
+
+            {/* Form Body */}
+            <div style={{ padding: '24px 20px' }}>
+              <p style={{
+                color: '#64748b',
+                fontSize: 15,
+                margin: '0 0 20px 0',
+              }}>
+                Subscribe for latest content
+              </p>
+
+              <form
+                action="https://app.convertkit.com/forms/5f65768cbd/subscriptions"
+                method="post"
+                target="_blank"
+              >
+                <input
+                  type="email"
+                  name="email_address"
+                  placeholder="Email Address"
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    borderRadius: 6,
+                    border: '1px solid #cbd5e1',
+                    fontSize: 14,
+                    color: '#1e293b',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    marginBottom: 20,
+                  }}
+                />
+
+                {/* Divider Line with Circle */}
+                <div style={{
+                  position: 'relative',
+                  textAlign: 'center',
+                  marginBottom: 24,
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: 0,
+                    right: 0,
+                    height: 1,
+                    backgroundColor: '#e2e8f0',
+                  }} />
+                  <span style={{
+                    position: 'relative',
+                    backgroundColor: '#ffffff',
+                    padding: '0 8px',
+                    color: '#cbd5e1',
+                    fontSize: 16,
+                  }}>
+                    ⊕
+                  </span>
+                </div>
+
+                <button
+                  type="submit"
+                  style={{
+                    backgroundColor: '#52d2ff',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: 24,
+                    padding: '12px 28px',
+                    fontSize: 14,
+                    fontWeight: 700,
+                    letterSpacing: '0.5px',
+                    cursor: 'pointer',
+                    textTransform: 'uppercase',
+                    boxShadow: '0 2px 8px rgba(82, 210, 255, 0.4)',
+                    transition: 'opacity 0.2s ease',
+                  }}
+                >
+                  SUBSCRIBE
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
