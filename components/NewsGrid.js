@@ -81,51 +81,29 @@ export default function NewsGrid() {
 
         {/* Newsletter Sidebar */}
         <div style={{ width: 280, flexShrink: 0 }}>
-          <div className="card" style={{ padding: 24 }}>
-            <div style={{
-              width: 48, height: 48, borderRadius: 12,
-              background: 'var(--accent-light)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 24, marginBottom: 16,
-            }}>
-              📧
-            </div>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>
-              Stay Ahead in AI
-            </h3>
-            <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16 }}>
-              Get the best AI tools, tutorials & news in your inbox.
-            </p>
-            
-            {/* Direct ConvertKit Form Action */}
-            <form 
-              action="https://app.convertkit.com/forms/5f65768cbd/subscriptions" 
-              method="post"
-              target="_blank"
-            >
-              <input
-                type="email"
-                name="email_address"
-                placeholder="Enter your email"
-                required
-                style={{
-                  width: '100%',
-                  padding: '10px 14px',
-                  borderRadius: 8,
-                  border: '1px solid var(--border)',
-                  fontSize: 13,
-                  marginBottom: 10,
-                  outline: 'none',
-                }}
-              />
-              <button 
-                type="submit" 
-                className="btn btn-primary" 
-                style={{ width: '100%', justifyContent: 'center', cursor: 'pointer' }}
-              >
-                Subscribe
-              </button>
-            </form>
+          <div className="card" style={{ padding: 0, overflow: 'hidden', height: 380 }}>
+            <iframe
+              srcDoc={`
+                <!DOCTYPE html>
+                <html>
+                  <head>
+                    <style>
+                      body { margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+                      .seva-form { max-width: 100% !important; margin: 0 !important; }
+                    </style>
+                  </head>
+                  <body>
+                    <script async data-uid="5f65768cbd" src="https://lord-of-claude.kit.com/5f65768cbd/index.js"></script>
+                  </body>
+                </html>
+              `}
+              style={{
+                width: '100%',
+                height: '100%',
+                border: 'none',
+              }}
+              title="Newsletter Subscription"
+            />
           </div>
         </div>
       </div>
