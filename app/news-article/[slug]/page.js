@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getContentItem, getAllSlugs, getContentList } from '../../../lib/content'
+import { getContentItem, getAllSlugs } from '../../../lib/content'
 import Link from 'next/link'
 import NewsSidebar from '../../../components/NewsSidebar'
 
@@ -32,12 +32,18 @@ export default function NewsArticlePage({ params }) {
 
   if (!article) return notFound()
 
-  // Fetch all news items for the sidebar list
-  const allArticles = getContentList('news') || []
+  // Safely fetch all news items using existing exported helper functions
+  const rawSlugs = getAllSlugs('news') || []
+  const allArticles = rawSlugs
+    .map((s) => {
+      const itemSlug = typeof s === 'string' ? s : s?.slug
+      return itemSlug ? getContentItem('news', itemSlug) : null
+    })
+    .filter(Boolean)
 
-  // Exclude current article from sidebar list to avoid self-referencing
+  // Exclude current article from sidebar list
   const sidebarArticles = allArticles.filter(
-    (item) => item.slug !== slug && item.id !== article.id
+    (item) => item.slug !== slug && item.title !== article.title
   )
 
   return (
