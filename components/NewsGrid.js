@@ -80,13 +80,13 @@ export default function NewsGrid() {
           </div>
         </div>
 
-        {/* Newsletter Sidebar */}
+        {/* Newsletter Sidebar Container */}
         <div style={{ width: 280, flexShrink: 0 }}>
-          <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <div id="kit-form-container" style={{ width: '100%', minHeight: 320 }}>
             <Script
               src="https://lord-of-claude.kit.com/5f65768cbd/index.js"
               data-uid="5f65768cbd"
-              strategy="lazyOnload"
+              strategy="afterInteractive"
             />
           </div>
         </div>
