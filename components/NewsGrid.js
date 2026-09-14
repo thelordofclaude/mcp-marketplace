@@ -97,9 +97,9 @@ export default function NewsGrid() {
               Get the best AI tools, tutorials & news in your inbox.
             </p>
             
-            {/* Native Kit Form Integration */}
+            {/* Direct ConvertKit Form Action */}
             <form 
-              action="https://app.kit.com/forms/5f65768cbd/subscriptions" 
+              action="https://app.convertkit.com/forms/5f65768cbd/subscriptions" 
               method="post"
               target="_blank"
             >
