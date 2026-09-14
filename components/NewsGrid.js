@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Link from 'next/link'
 
 const newsItems = [
@@ -36,6 +37,30 @@ const newsItems = [
 ]
 
 export default function NewsGrid() {
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState('idle') // 'idle' | 'loading' | 'success' | 'error'
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setStatus('loading')
+
+    try {
+      const formData = new FormData()
+      formData.append('email_address', email)
+
+      await fetch('https://app.kit.com/forms/9913635/subscriptions', {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors', // Bypasses browser CORS blocks for seamless submission
+      })
+
+      setStatus('success')
+      setEmail('')
+    } catch (err) {
+      setStatus('error')
+    }
+  }
+
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px 40px', width: '100%' }}>
       <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
@@ -108,57 +133,75 @@ export default function NewsGrid() {
 
             {/* Form Body */}
             <div style={{ padding: '24px 20px' }}>
-              <p style={{
-                color: '#64748b',
-                fontSize: 15,
-                margin: '0 0 20px 0',
-              }}>
-                Subscribe for latest content
-              </p>
+              {status === 'success' ? (
+                <div style={{ textAlign: 'center', padding: '16px 0' }}>
+                  <div style={{ fontSize: 36, marginBottom: 12 }}>🎉</div>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, color: '#1e293b', marginBottom: 8 }}>
+                    Successfully Subscribed!
+                  </h3>
+                  <p style={{ fontSize: 14, color: '#64748b', margin: 0, lineHeight: 1.4 }}>
+                    Thank you for joining. Please check your inbox to confirm your subscription.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <p style={{
+                    color: '#64748b',
+                    fontSize: 15,
+                    margin: '0 0 20px 0',
+                  }}>
+                    Subscribe for latest content
+                  </p>
 
-              <form
-                action="https://app.convertkit.com/forms/5f65768cbd/subscriptions"
-                method="post"
-                target="_blank"
-              >
-                <input
-                  type="email"
-                  name="email_address"
-                  placeholder="Email Address"
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    borderRadius: 6,
-                    border: '1px solid #cbd5e1',
-                    fontSize: 14,
-                    color: '#1e293b',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                    marginBottom: 20,
-                  }}
-                />
+                  <form onSubmit={handleSubmit}>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Email Address"
+                      required
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        borderRadius: 6,
+                        border: '1px solid #cbd5e1',
+                        fontSize: 14,
+                        color: '#1e293b',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                        marginBottom: 20,
+                      }}
+                    />
 
-                <button
-                  type="submit"
-                  style={{
-                    backgroundColor: '#52d2ff',
-                    color: '#ffffff',
-                    border: 'none',
-                    borderRadius: 24,
-                    padding: '12px 28px',
-                    fontSize: 14,
-                    fontWeight: 700,
-                    letterSpacing: '0.5px',
-                    cursor: 'pointer',
-                    textTransform: 'uppercase',
-                    boxShadow: '0 2px 8px rgba(82, 210, 255, 0.4)',
-                    transition: 'opacity 0.2s ease',
-                  }}
-                >
-                  SUBSCRIBE
-                </button>
-              </form>
+                    <button
+                      type="submit"
+                      disabled={status === 'loading'}
+                      style={{
+                        backgroundColor: '#52d2ff',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: 24,
+                        padding: '12px 28px',
+                        fontSize: 14,
+                        fontWeight: 700,
+                        letterSpacing: '0.5px',
+                        cursor: 'pointer',
+                        textTransform: 'uppercase',
+                        boxShadow: '0 2px 8px rgba(82, 210, 255, 0.4)',
+                        opacity: status === 'loading' ? 0.7 : 1,
+                      }}
+                    >
+                      {status === 'loading' ? 'SUBSCRIBING...' : 'SUBSCRIBE'}
+                    </button>
+
+                    {status === 'error' && (
+                      <p style={{ color: '#ef4444', fontSize: 13, marginTop: 12, margin: 0 }}>
+                        Something went wrong. Please try again.
+                      </p>
+                    )}
+                  </form>
+                </>
+              )}
             </div>
           </div>
         </div>
