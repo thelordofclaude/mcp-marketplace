@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Script from 'next/script'
 
 const newsItems = [
   {
@@ -80,14 +79,53 @@ export default function NewsGrid() {
           </div>
         </div>
 
-        {/* Newsletter Sidebar Container */}
+        {/* Newsletter Sidebar */}
         <div style={{ width: 280, flexShrink: 0 }}>
-          <div id="kit-form-container" style={{ width: '100%', minHeight: 320 }}>
-            <Script
-              src="https://lord-of-claude.kit.com/5f65768cbd/index.js"
-              data-uid="5f65768cbd"
-              strategy="afterInteractive"
-            />
+          <div className="card" style={{ padding: 24 }}>
+            <div style={{
+              width: 48, height: 48, borderRadius: 12,
+              background: 'var(--accent-light)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 24, marginBottom: 16,
+            }}>
+              📧
+            </div>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>
+              Stay Ahead in AI
+            </h3>
+            <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16 }}>
+              Get the best AI tools, tutorials & news in your inbox.
+            </p>
+            
+            {/* Native Kit Form Integration */}
+            <form 
+              action="https://app.kit.com/f/5f65768cbd" 
+              method="post"
+              target="_blank"
+            >
+              <input
+                type="email"
+                name="email_address"
+                placeholder="Enter your email"
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  borderRadius: 8,
+                  border: '1px solid var(--border)',
+                  fontSize: 13,
+                  marginBottom: 10,
+                  outline: 'none',
+                }}
+              />
+              <button 
+                type="submit" 
+                className="btn btn-primary" 
+                style={{ width: '100%', justifyContent: 'center', cursor: 'pointer' }}
+              >
+                Subscribe
+              </button>
+            </form>
           </div>
         </div>
       </div>
