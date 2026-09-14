@@ -99,7 +99,7 @@ export default function NewsGrid() {
             
             {/* Native Kit Form Integration */}
             <form 
-              action="https://app.kit.com/f/5f65768cbd" 
+              action="https://app.kit.com/forms/5f65768cbd/subscriptions" 
               method="post"
               target="_blank"
             >
