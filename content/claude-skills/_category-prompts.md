@@ -7,15 +7,18 @@ type: category
 
 # Claude Prompts
 
-- [awesome-claude-prompts](/claude-skill/awesome-claude-prompts/) — ⭐ 5,464
-- [claude-code-prompt-improver](/claude-skill/claude-code-prompt-improver/) — ⭐ 1,918
-- [pm-claude-skills](/claude-skill/pm-claude-skills/) — ⭐ 1,340
-- [claude-code-skill-factory](/claude-skill/claude-code-skill-factory/) — ⭐ 859
-- [higgsfield-ai-prompt-skill](/claude-skill/higgsfield-ai-prompt-skill/) — ⭐ 506
-- [anti-defensive-writing-Skill](/claude-skill/anti-defensive-writing-skill/) — ⭐ 482
-- [claude-ai-music-skills](/claude-skill/claude-ai-music-skills/) — ⭐ 475
-- [offer-toolkit-skill](/claude-skill/offer-toolkit-skill/) — ⭐ 402
-- [ai-shortfilm-prompts](/claude-skill/ai-shortfilm-prompts/) — ⭐ 399
-- [ai-video-generator-claude](/claude-skill/ai-video-generator-claude/) — ⭐ 360
-- [thesis-defense-pptx-skill](/claude-skill/thesis-defense-pptx-skill/) — ⭐ 256
-- [ai-media-generator](/claude-skill/ai-media-generator/) — ⭐ 237
+- [claude-design-skill](/claude-skill/claude-design-skill/) — ⭐ 195
+- [claude-prompts-mcp](/claude-skill/claude-prompts-mcp/) — ⭐ 187
+- [comfy-claude-prompt-library](/claude-skill/comfy-claude-prompt-library/) — ⭐ 151
+- [tianming-skill](/claude-skill/tianming-skill/) — ⭐ 144
+- [vibe-creating-skill](/claude-skill/vibe-creating-skill/) — ⭐ 141
+- [claude-prompts](/claude-skill/claude-prompts/) — ⭐ 106
+- [claude-code-prompts](/claude-skill/claude-code-prompts/) — ⭐ 18
+- [claude-code-prompt-analysis](/claude-skill/claude-code-prompt-analysis/) — ⭐ 18
+- [trae-prompt-claude-skills](/claude-skill/trae-prompt-claude-skills/) — ⭐ 13
+- [claude-prompt-craft-skill](/claude-skill/claude-prompt-craft-skill/) — ⭐ 11
+- [claude-prompts](/claude-skill/claude-prompts/) — ⭐ 7
+- [claude-skill-prompt-optimizer](/claude-skill/claude-skill-prompt-optimizer/) — ⭐ 5
+- [seedance-prompting-claude-skill](/claude-skill/seedance-prompting-claude-skill/) — ⭐ 5
+- [claude-code-prompt-plunderer](/claude-skill/claude-code-prompt-plunderer/) — ⭐ 5
+- [claude-skill-ai-video-prompt](/claude-skill/claude-skill-ai-video-prompt/) — ⭐ 5
