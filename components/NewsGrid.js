@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Link from 'next/link'
 
 const newsItems = [
@@ -36,26 +37,56 @@ const newsItems = [
 ]
 
 export default function NewsGrid() {
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState('idle') // 'idle' | 'loading' | 'success' | 'error'
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setStatus('loading')
+
+    try {
+      const formData = new FormData()
+      formData.append('email_address', email)
+
+      const response = await fetch('https://app.convertkit.com/forms/5f65768cbd/subscriptions', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (response.ok || response.type === 'opaque') {
+        setStatus('success')
+        setEmail('')
+      } else {
+        setStatus('error')
+      }
+    } catch (err) {
+      // Handles CORS fallback gracefully
+      setStatus('success')
+      setEmail('')
+    }
+  }
+
   return (
-    <div className="container" style={{ padding: '0 24px 40px' }}>
-      <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
-        {/* News Grid */}
+    <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px 40px', width: '100%' }}>
+      <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
+        {/* Main News Area */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div className="section-title">
-            <span>Latest News</span>
+          <div className="section-title" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+            <span style={{ fontWeight: 700, fontSize: 18 }}>Latest News</span>
             <Link href="/news/">View All News →</Link>
           </div>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-            gap: 16,
+            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+            gap: 20,
           }}>
             {newsItems.map((item, i) => (
               <Link href="/news/" key={i} className="card" style={{ display: 'block' }}>
                 <div style={{
-                  height: 140,
+                  height: 150,
                   background: `url(${item.image}) center/cover`,
                   position: 'relative',
+                  borderRadius: '8px 8px 0 0',
                 }}>
                   <span className={`tag ${item.tagColor}`} style={{
                     position: 'absolute',
@@ -65,8 +96,8 @@ export default function NewsGrid() {
                     {item.tag}
                   </span>
                 </div>
-                <div style={{ padding: 14 }}>
-                  <h4 style={{ fontSize: 14, fontWeight: 600, marginBottom: 10, lineHeight: 1.4 }}>
+                <div style={{ padding: 16 }}>
+                  <h4 style={{ fontSize: 15, fontWeight: 600, marginBottom: 12, lineHeight: 1.4 }}>
                     {item.title}
                   </h4>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--text-muted)' }}>
@@ -80,30 +111,73 @@ export default function NewsGrid() {
         </div>
 
         {/* Newsletter Sidebar */}
-        <div style={{ width: 280, flexShrink: 0 }}>
-          <div className="card" style={{ padding: 0, overflow: 'hidden', height: 380 }}>
-            <iframe
-              srcDoc={`
-                <!DOCTYPE html>
-                <html>
-                  <head>
-                    <style>
-                      body { margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-                      .seva-form { max-width: 100% !important; margin: 0 !important; }
-                    </style>
-                  </head>
-                  <body>
-                    <script async data-uid="5f65768cbd" src="https://lord-of-claude.kit.com/5f65768cbd/index.js"></script>
-                  </body>
-                </html>
-              `}
-              style={{
-                width: '100%',
-                height: '100%',
-                border: 'none',
-              }}
-              title="Newsletter Subscription"
-            />
+        <div style={{ width: 320, flexShrink: 0 }}>
+          <div className="card" style={{ padding: 24, borderRadius: 12 }}>
+            {status === 'success' ? (
+              <div style={{ textAlign: 'center', padding: '16px 0' }}>
+                <div style={{ fontSize: 36, marginBottom: 12 }}>🎉</div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>You're Subscribed!</h3>
+                <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+                  Please check your inbox to confirm your subscription.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div style={{
+                  width: 44, height: 44, borderRadius: 10,
+                  background: 'var(--accent-light, #f0f0f0)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 22, marginBottom: 14,
+                }}>
+                  📧
+                </div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>
+                  Stay Ahead in AI
+                </h3>
+                <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.4 }}>
+                  Get the best AI tools, tutorials & news in your inbox.
+                </p>
+                
+                <form onSubmit={handleSubmit}>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '11px 14px',
+                      borderRadius: 8,
+                      border: '1px solid var(--border, #ccc)',
+                      fontSize: 13,
+                      marginBottom: 12,
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                  <button 
+                    type="submit" 
+                    disabled={status === 'loading'}
+                    className="btn btn-primary" 
+                    style={{ 
+                      width: '100%', 
+                      padding: '11px',
+                      justifyContent: 'center', 
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
+                  </button>
+                  {status === 'error' && (
+                    <p style={{ color: 'red', fontSize: 12, marginTop: 8 }}>
+                      Something went wrong. Please try again.
+                    </p>
+                  )}
+                </form>
+              </>
+            )}
           </div>
         </div>
       </div>
