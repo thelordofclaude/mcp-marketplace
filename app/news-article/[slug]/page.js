@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { getContentItem, getAllSlugs, getContentList } from '../../../lib/content'
 import Link from 'next/link'
-import NewsSidebar from '@/components/NewsSidebar'
+import NewsSidebar from '../../../components/NewsSidebar'
 
 export function generateStaticParams() {
   try {
