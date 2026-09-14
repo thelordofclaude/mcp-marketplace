@@ -1,34 +1,34 @@
 ---
 slug: awesome-mcp-servers
-title: "awesome-mcp-servers MCP Server — Claude & Cursor Integration"
-meta_description: "A curated list of Model Context Protocol (MCP) servers Install in Claude, Cursor & Claude Code. 4,293 GitHub stars."
-keywords: "awesome-mcp-servers, MCP server, Model Context Protocol, Claude integration, general MCP"
+title: "Awesome-MCP-Servers MCP Server — Claude & Cursor Integration"
+meta_description: "A curated list of Model Context Protocol (MCP) servers Install in Claude, Cursor & Claude Code. 1,064 GitHub stars."
+keywords: "Awesome-MCP-Servers, MCP server, Model Context Protocol, Claude integration, general MCP"
 category: general
 type: mcp-server
-stars: 4293
+stars: 1064
 language: Unknown
-repo: wong2/awesome-mcp-servers
-github_url: https://github.com/wong2/awesome-mcp-servers
-updated_at: 2026-09-06
+repo: YuzeHao2023/Awesome-MCP-Servers
+github_url: https://github.com/YuzeHao2023/Awesome-MCP-Servers
+updated_at: 2026-09-13
 schema_json: |
-  {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "awesome-mcp-servers MCP Server", "description": "A curated list of Model Context Protocol (MCP) servers", "applicationCategory": "DeveloperApplication", "operatingSystem": "Cross-platform", "programmingLanguage": "Unknown", "aggregateRating": {"@type": "AggregateRating", "ratingValue": "5", "ratingCount": "4293"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Organization", "name": "wong2"}, "codeRepository": "https://github.com/wong2/awesome-mcp-servers"}
+  {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Awesome-MCP-Servers MCP Server", "description": "A curated list of Model Context Protocol (MCP) servers ", "applicationCategory": "DeveloperApplication", "operatingSystem": "Cross-platform", "programmingLanguage": "Unknown", "aggregateRating": {"@type": "AggregateRating", "ratingValue": "5", "ratingCount": "1064"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Organization", "name": "YuzeHao2023"}, "codeRepository": "https://github.com/YuzeHao2023/Awesome-MCP-Servers"}
 ---
 
-# awesome-mcp-servers MCP Server
+# Awesome-MCP-Servers MCP Server
 
-## What is awesome-mcp-servers?
+## What is Awesome-MCP-Servers?
 
-awesome-mcp-servers is a production-ready Model Context Protocol (MCP) server with 4,293 GitHub stars. It allows AI agents like Claude to perform real-world tasks through standardized tool calls.
+Awesome-MCP-Servers is a production-ready Model Context Protocol (MCP) server with 1,064 GitHub stars. It allows AI agents like Claude to perform real-world tasks through standardized tool calls.
 
 ## Installation
 
 ```bash
 # Via Smithery (recommended)
-npx -y @smithery/cli install wong2/awesome-mcp-servers
+npx -y @smithery/cli install YuzeHao2023/Awesome-MCP-Servers
 
 # Or manual
-git clone https://github.com/wong2/awesome-mcp-servers.git
-cd awesome-mcp-servers
+git clone https://github.com/YuzeHao2023/Awesome-MCP-Servers.git
+cd Awesome-MCP-Servers
 ```
 
 ## Compatibility
@@ -38,9 +38,9 @@ Compatible with: Claude Desktop, Claude Code, Cursor, Windsurf, Cline, and any M
 ## Details
 
 - **Language:** Unknown
-- **Stars:** ⭐ 4,293
-- **Forks:** 🍴 1,971
-- **License:** MIT
-- **Updated:** 2026-09-06
-- **Repo:** [wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-servers)
+- **Stars:** ⭐ 1,064
+- **Forks:** 🍴 297
+- **License:** Apache-2.0
+- **Updated:** 2026-09-13
+- **Repo:** [YuzeHao2023/Awesome-MCP-Servers](https://github.com/YuzeHao2023/Awesome-MCP-Servers)
 
