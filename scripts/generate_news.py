@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
 The Signal — AI News Publisher (Upgraded Edition)
-Fetches from expanded AI news feeds, rewrites headlines and detailed long-form content,
+Fetches from expanded AI news feeds and web scrapers, rewrites headlines and detailed long-form content,
 generates dynamic comic-book style artwork, and assigns reporter profiles.
 """
 import json, os, re, time, random, urllib.parse
 from urllib.request import Request, urlopen
 from datetime import datetime
 from xml.etree import ElementTree as ET
+from bs4 import BeautifulSoup
 
 PROCESSED = "processed-news.json"
 CONTENT_DIR = "content/news"
@@ -79,21 +80,24 @@ COMMENT_TEMPLATES = [
     "Great analysis. The integration complexity seems lower than expected, which could accelerate enterprise adoption."
 ]
 
-# ─── EXPANDED RSS FEEDS INCLUDING YOUR NEW SOURCES ──────────────────────────
+# ─── UPDATED & VERIFIED RSS FEEDS ───────────────────────────────────────────
 RSS_FEEDS = [
-    "https://www.androguider.com/feed",
-    "https://androcoders.in/ai-news/feed",
-    "https://www.worldneural.com/feed",
-    "https://ground.news/rss",
+    "https://www.androguider.com/feeds/posts/default?alt=rss",
     "https://aiweekly.co/issues.rss",
     "https://www.artificialintelligence-news.com/feed/",
     "https://techcrunch.com/category/artificial-intelligence/feed/",
-    "https://www.theverge.com/ai-artificial-intelligence/rss/index.xml",
+    "https://www.theverge.com/rss/index.xml",
     "https://venturebeat.com/category/ai/feed/",
-    "https://www.wired.com/tag/artificial-intelligence/feed/",
+    "https://www.wired.com/feed/tag/ai/latest/rss",
     "https://arstechnica.com/tag/ai/feed/",
     "https://www.technologyreview.com/feed/"
 ]
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.5"
+}
 
 AI_KEYWORDS = [
     'ai', 'artificial intelligence', 'llm', 'claude', 'gpt', 'openai',
@@ -148,7 +152,6 @@ def assign_seo_tags(title, description):
 
 # ─── HIGH QUALITY COMIC MAGAZINE IMAGE GENERATOR ────────────────────────────
 def generate_comic_image(title):
-    # Constructing detailed prompt focused on comic magazine graphic style
     clean_title = re.sub(r'[^\w\s]', '', title)
     prompt = (
         f"graphic novel style comic book illustration of {clean_title}, "
@@ -161,7 +164,6 @@ def generate_comic_image(title):
 
 # ─── REWRITE ENGINE FOR HEADLINES & LONG ARTICLES ──────────────────────────
 def rewrite_headline_and_article(original_title, desc, reporter):
-    # 1. Headline Rewriting (Angles & Active Verbs)
     prefixes = [
         "Inside the Shift:", "Behind the Scenes:", "Market Breakthrough:",
         "The Next Era:", "Analysis:", "Strategic Move:"
@@ -185,7 +187,6 @@ def rewrite_headline_and_article(original_title, desc, reporter):
     if rewritten_title == original_title:
         rewritten_title = f"{random.choice(prefixes)} {original_title}"
 
-    # 2. Comprehensive Long-Form Body Generation
     clean_desc = re.sub(r"<[^>]+>", "", desc).strip()
     sentences = [s.strip() for s in clean_desc.split(". ") if len(s.strip()) > 5]
     
@@ -218,27 +219,26 @@ def rewrite_headline_and_article(original_title, desc, reporter):
 """
     return rewritten_title, body
 
-# ─── RSS FETCHING ────────────────────────────────────────────────────────────
+# ─── RSS FETCHING & DIRECT WEB SCRAPING ──────────────────────────────────────
 def fetch_rss(url):
     try:
-        req = Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) TheSignal-Bot/2.0"})
+        req = Request(url, headers=HEADERS)
         with urlopen(req, timeout=15) as r:
             xml = r.read().decode("utf-8", errors="ignore")
             root = ET.fromstring(xml)
             items = []
             
-            # Handles both RSS <item> and Atom <entry>
             nodes = root.findall(".//item") or root.findall(".//{http://www.w3.org/2005/Atom}entry")
             for item in nodes:
-                title = item.findtext("title", "").strip() or item.findtext("{http://www.w3.org/2005/Atom}title", "").strip()
-                link = item.findtext("link", "").strip() or item.findtext("{http://www.w3.org/2005/Atom}link", "").strip()
+                title = (item.findtext("title") or item.findtext("{http://www.w3.org/2005/Atom}title") or "").strip()
+                link = (item.findtext("link") or item.findtext("{http://www.w3.org/2005/Atom}link") or "").strip()
                 desc = (
-                    item.findtext("description", "") or 
-                    item.findtext("summary", "") or 
-                    item.findtext("{http://www.w3.org/2005/Atom}summary", "") or ""
+                    item.findtext("description") or 
+                    item.findtext("summary") or 
+                    item.findtext("{http://www.w3.org/2005/Atom}summary") or ""
                 )
-                pub_date = item.findtext("pubDate", "") or item.findtext("{http://www.w3.org/2005/Atom}updated", "")
-                guid = item.findtext("guid", "") or link
+                pub_date = item.findtext("pubDate") or item.findtext("{http://www.w3.org/2005/Atom}updated") or ""
+                guid = item.findtext("guid") or link
                 
                 clean_desc = re.sub(r"<[^>]+>", "", desc).strip()[:1000]
                 if title and len(title) > 12:
@@ -254,6 +254,48 @@ def fetch_rss(url):
     except Exception as e:
         print(f"   [Feed Warning] Could not parse ({url[:45]}...): {e}")
         return []
+
+def fetch_ground_news_articles():
+    """Scrapes stories directly from Ground News AI Topic page."""
+    items = []
+    target_url = "https://ground.news/interest/artificial-intelligence"
+    try:
+        req = Request(target_url, headers=HEADERS)
+        with urlopen(req, timeout=15) as response:
+            html = response.read().decode("utf-8", errors="ignore")
+            soup = BeautifulSoup(html, "html.parser")
+            
+            for a_tag in soup.find_all("a", href=re.compile(r"/article/")):
+                title = a_tag.get_text(strip=True)
+                href = a_tag.get("href", "")
+                full_link = f"https://ground.news{href}" if href.startswith("/") else href
+                
+                if title and len(title) > 15:
+                    items.append({
+                        "id": abs(hash(full_link)),
+                        "title": title,
+                        "link": full_link,
+                        "description": title,
+                        "pub_date": "",
+                        "source": "ground.news"
+                    })
+    except Exception as e:
+        print(f"   [Scrape Warning] Could not scrape Ground News: {e}")
+    return items
+
+def get_all_articles():
+    """Aggregates items from standard RSS feeds and direct page scrapers."""
+    all_articles = []
+    
+    # Standard XML RSS/Atom Feeds
+    for feed in RSS_FEEDS:
+        all_articles.extend(fetch_rss(feed))
+        time.sleep(0.1)
+        
+    # HTML Scrapers for non-RSS sites (e.g. Ground News)
+    all_articles.extend(fetch_ground_news_articles())
+    
+    return all_articles
 
 # ─── AUTOMATED COMMENTS MARKUP ───────────────────────────────────────────────
 def comments_section_html(num_comments=2):
@@ -349,21 +391,17 @@ def main():
     target = min(3, max(1, remaining))
 
     if remaining <= 0:
-        print(f"   Daily limit ({daily_limit}) reached for {today_str}. Skipping.")
+        print(f"    Daily limit ({daily_limit}) reached for {today_str}. Skipping.")
         save_processed(proc)
         return
 
-    all_articles = []
-    print("🔍 Crawling RSS Feeds...")
-    for feed in RSS_FEEDS:
-        articles = fetch_rss(feed)
-        for a in articles:
-            if a["id"] not in done:
-                all_articles.append(a)
-        time.sleep(0.1)
+    print("🔍 Crawling RSS Feeds & Direct Scrapers...")
+    fetched_articles = get_all_articles()
+    
+    all_articles = [a for a in fetched_articles if a["id"] not in done]
 
     if not all_articles:
-        print("   No new articles found.")
+        print("    No new articles found.")
         save_processed(proc)
         return
 
@@ -378,10 +416,10 @@ def main():
         proc["ids"].append(article["id"])
         proc["slugs"].append(slug)
         proc["today_count"] = proc.get("today_count", 0) + 1
-        print(f"   ✅ Published: {slug}.md")
+        print(f"    Published: {slug}.md")
 
     save_processed(proc)
-    print("✅ PROCESS COMPLETE")
+    print("PROCESS COMPLETE")
 
 if __name__ == "__main__":
     main()
