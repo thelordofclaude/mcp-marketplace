@@ -80,7 +80,7 @@ export default function NewsGrid() {
           </div>
         </div>
 
-        {/* Custom Newsletter Card (Styled exactly like image) */}
+        {/* Custom Newsletter Card */}
         <div style={{ width: 340, flexShrink: 0 }}>
           <div style={{
             borderRadius: 12,
@@ -138,31 +138,6 @@ export default function NewsGrid() {
                     marginBottom: 20,
                   }}
                 />
-
-                {/* Divider Line with Circle */}
-                <div style={{
-                  position: 'relative',
-                  textAlign: 'center',
-                  marginBottom: 24,
-                }}>
-                  <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: 0,
-                    right: 0,
-                    height: 1,
-                    backgroundColor: '#e2e8f0',
-                  }} />
-                  <span style={{
-                    position: 'relative',
-                    backgroundColor: '#ffffff',
-                    padding: '0 8px',
-                    color: '#cbd5e1',
-                    fontSize: 16,
-                  }}>
-                    ⊕
-                  </span>
-                </div>
 
                 <button
                   type="submit"
