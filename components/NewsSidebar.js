@@ -15,82 +15,175 @@ export default function NewsSidebar({ articles = [] }) {
     }
   };
 
-  // Get the latest 6 articles dynamically passed from props
-  const latestArticles = articles.slice(0, 6);
+  const latestArticles = articles.slice(0, 5);
 
   return (
-    <aside className="w-full lg:w-[340px] shrink-0">
-      <div className="sticky top-6 flex flex-col gap-8">
+    <aside style={{ width: '340px', flexShrink: 0, position: 'sticky', top: '24px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
         
-        {/* 1. MOST POPULAR / LATEST NEWS SECTION */}
-        <section className="relative overflow-hidden pr-4">
-          <span className="block text-xs font-extrabold uppercase tracking-widest text-purple-700 mb-4">
+        {/* 1. MOST POPULAR LISTICLE */}
+        <section style={{ position: 'relative', overflow: 'hidden', paddingRight: '16px' }}>
+          <span style={{
+            display: 'block',
+            fontSize: '13px',
+            fontWeight: '800',
+            letterSpacing: '1px',
+            color: '#6366f1',
+            marginBottom: '16px',
+            textTransform: 'uppercase'
+          }}>
             MOST POPULAR
           </span>
 
-          {/* Rotated Cyan Watermark Background Text */}
+          {/* Cyan Rotated Background Watermark */}
           <div 
-            className="absolute -right-8 top-1/2 -translate-y-1/2 rotate-90 text-[64px] font-black text-[rgb(127,255,212)] opacity-60 pointer-events-none select-none whitespace-nowrap z-0"
+            style={{
+              position: 'absolute',
+              right: '-40px',
+              top: '50%',
+              transform: 'translateY(-50%) rotate(90deg)',
+              fontSize: '60px',
+              fontWeight: '900',
+              color: '#7fffd4',
+              opacity: 0.5,
+              pointerEvents: 'none',
+              userSelect: 'none',
+              whiteSpace: 'nowrap',
+              zIndex: 0
+            }}
             aria-hidden="true"
           >
             Most Popular
           </div>
 
-          <ol className="relative z-10 list-none p-0 m-0">
-            {latestArticles.length > 0 ? (
-              latestArticles.map((item, index) => (
-                <li 
-                  key={item.id || item.slug || index} 
-                  className="relative pl-7 pb-4 mb-4 border-b border-gray-200 last:border-b-0 last:mb-0"
+          <ol style={{ position: 'relative', zIndex: 1, listStyle: 'none', padding: 0, margin: 0 }}>
+            {latestArticles.map((item, index) => (
+              <li 
+                key={item.slug || index} 
+                style={{
+                  position: 'relative',
+                  paddingLeft: '28px',
+                  paddingBottom: '14px',
+                  marginBottom: '14px',
+                  borderBottom: '1px solid #e5e7eb'
+                }}
+              >
+                <span style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                  fontWeight: '800',
+                  fontSize: '16px',
+                  color: '#6366f1'
+                }}>
+                  {index + 1}.
+                </span>
+                <Link 
+                  href={`/news-article/${item.slug}`} 
+                  style={{
+                    fontSize: '15px',
+                    fontWeight: '700',
+                    lineHeight: '1.35',
+                    color: '#111827',
+                    textDecoration: 'none'
+                  }}
                 >
-                  <span className="absolute left-0 top-0 font-extrabold text-base text-purple-700">
-                    {index + 1}.
-                  </span>
-                  <Link 
-                    href={item.url || `/news/${item.slug || item.id}`} 
-                    className="text-[15px] font-bold leading-snug text-gray-900 hover:text-blue-600 transition-colors duration-150 block"
-                  >
-                    {item.title}
-                  </Link>
-                </li>
-              ))
-            ) : (
-              <p className="text-xs text-gray-500">No recent stories found.</p>
-            )}
+                  {item.title}
+                </Link>
+              </li>
+            ))}
           </ol>
         </section>
 
-        {/* 2. NEWSLETTER SUBSCRIBE BOX */}
-        <section className="bg-slate-50 border border-slate-200 rounded-xl p-6">
-          <h3 className="text-lg font-bold text-slate-900 m-0 mb-2">
-            Get The Signal Delivered
-          </h3>
-          <p className="text-xs text-slate-600 leading-relaxed m-0 mb-4">
-            Subscribe to get breaking updates, technical deep-dives, and market analyses delivered straight to your inbox daily.
-          </p>
+        {/* 2. MAIN PAGE MATCHING NEWSLETTER BOX */}
+        <section style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '16px',
+          border: '1px solid #e2e8f0',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+          overflow: 'hidden'
+        }}>
+          {/* Cyan Header Box */}
+          <div style={{
+            backgroundColor: '#00bcff',
+            padding: '24px 20px',
+            textAlign: 'center'
+          }}>
+            <h3 style={{
+              margin: 0,
+              fontSize: '22px',
+              fontWeight: '800',
+              color: '#ffffff',
+              letterSpacing: '-0.3px'
+            }}>
+              Join the Newsletter
+            </h3>
+          </div>
 
-          {subscribed ? (
-            <div className="bg-green-50 text-green-700 border border-green-200 p-3 rounded-md text-xs font-semibold text-center">
-              ✓ Thanks for subscribing!
-            </div>
-          ) : (
-            <form onSubmit={handleSubscribe} className="flex flex-col gap-2.5">
-              <input 
-                type="email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email" 
-                required 
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-md text-sm outline-none focus:border-blue-500 transition-colors"
-              />
-              <button 
-                type="submit" 
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-md transition-colors duration-150 cursor-pointer"
-              >
-                Subscribe
-              </button>
-            </form>
-          )}
+          {/* Form Content Body */}
+          <div style={{ padding: '20px' }}>
+            <p style={{
+              margin: '0 0 16px 0',
+              fontSize: '14px',
+              color: '#64748b',
+              fontWeight: '500'
+            }}>
+              Subscribe for latest content
+            </p>
+
+            {subscribed ? (
+              <div style={{
+                backgroundColor: '#f0fdf4',
+                color: '#16a34a',
+                border: '1px solid #bbf7d0',
+                padding: '12px',
+                borderRadius: '8px',
+                fontSize: '13px',
+                fontWeight: '600',
+                textAlign: 'center'
+              }}>
+                ✓ Thanks for subscribing!
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <input 
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email Address" 
+                  required 
+                  style={{
+                    width: '100%',
+                    padding: '12px 14px',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <button 
+                  type="submit" 
+                  style={{
+                    width: 'fit-content',
+                    padding: '10px 24px',
+                    backgroundColor: '#00bcff',
+                    color: '#ffffff',
+                    fontWeight: '800',
+                    fontSize: '13px',
+                    letterSpacing: '0.5px',
+                    border: 'none',
+                    borderRadius: '20px',
+                    cursor: 'pointer',
+                    textTransform: 'uppercase',
+                    boxShadow: '0 2px 8px rgba(0, 188, 255, 0.3)'
+                  }}
+                >
+                  SUBSCRIBE
+                </button>
+              </form>
+            )}
+          </div>
         </section>
 
       </div>
