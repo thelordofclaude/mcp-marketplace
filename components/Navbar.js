@@ -20,13 +20,19 @@ export default function Navbar() {
       position: 'sticky',
       top: 0,
       zIndex: 100,
+      width: '100%',
     }}>
-      <div className="container" style={{
+      <div style={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justify: 'space-between',
         height: 64,
+        width: '100%',
+        maxWidth: '100%',
+        padding: '0 32px',
+        boxSizing: 'border-box'
       }}>
+        {/* Far Left: Larger Logo */}
         <Link href="/" style={{
           display: 'flex',
           alignItems: 'center',
@@ -36,13 +42,14 @@ export default function Navbar() {
           <Image 
             src="/logo.png" 
             alt="LORD OF CLAUDE Logo" 
-            width={180} 
-            height={48} 
-            style={{ height: 42, width: 'auto', objectFit: 'contain' }}
+            width={220} 
+            height={56} 
+            style={{ height: 50, width: 'auto', objectFit: 'contain' }}
             priority
           />
         </Link>
 
+        {/* Center Navigation Links */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {navItems.map(item => (
             <Link
@@ -66,6 +73,7 @@ export default function Navbar() {
           </Link>
         </div>
 
+        {/* Far Right Action Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <Link href="/advertise/" className="btn btn-outline" style={{ fontSize: 13, padding: '8px 16px' }}>
             📢 Advertise
