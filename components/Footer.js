@@ -42,7 +42,7 @@ export default function Footer() {
           <div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '14px', fontWeight: '600' }}>
               <li><Link href="/terms-of-service" style={{ color: '#ffffff', textDecoration: 'none' }}>Terms of Service</Link></li>
-              <li><Link href="/sitemap" style={{ color: '#ffffff', textDecoration: 'none' }}>Sitemap</Link></li>
+              <li><Link href="/sitemap.xml" style={{ color: '#ffffff', textDecoration: 'none' }}>Sitemap</Link></li>
               <li><Link href="/closed-captioning" style={{ color: '#ffffff', textDecoration: 'none' }}>Closed Captioning</Link></li>
               <li><Link href="/advertise" style={{ color: '#ffffff', textDecoration: 'none' }}>Advertise</Link></li>
               <li><Link href="/disclaimer" style={{ color: '#ffffff', textDecoration: 'none' }}>Disclaimer</Link></li>
