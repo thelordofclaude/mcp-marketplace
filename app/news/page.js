@@ -7,12 +7,18 @@ export const metadata = {
 };
 
 export default function NewsPage() {
-  const articles = Array.isArray(newsData) ? newsData : (newsData?.articles || []);
+  let articles = [];
+  if (Array.isArray(newsData)) {
+    articles = newsData;
+  } else if (newsData && typeof newsData === 'object') {
+    articles = newsData.articles || newsData.data || newsData.items || Object.values(newsData).find(Array.isArray) || [];
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* SEO Header Section */}
+        
+        {/* Keyword-Rich SEO Subtitle */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl tracking-tight mb-4">
             📰 AI News & Model Context Protocol Updates
@@ -22,23 +28,22 @@ export default function NewsPage() {
           </p>
         </div>
 
-        {/* Article Grid */}
+        {/* 21 Live Articles Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map((article, idx) => {
             const slug = article.slug || article.id || idx;
-            const articleDate = article.date || article.published_at || article.timestamp;
+            const rawDate = article.date || article.published_at || article.timestamp;
 
-            // Format exact dates safely
             let formattedDate = 'Sep 16, 2026';
-            if (articleDate) {
+            if (rawDate) {
               try {
-                formattedDate = new Date(articleDate).toLocaleDateString('en-US', {
+                formattedDate = new Date(rawDate).toLocaleDateString('en-US', {
                   month: 'short',
                   day: 'numeric',
                   year: 'numeric',
                 });
               } catch (e) {
-                formattedDate = String(articleDate);
+                formattedDate = String(rawDate);
               }
             }
 
@@ -48,10 +53,10 @@ export default function NewsPage() {
                 className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between"
               >
                 <div>
-                  {article.image && (
+                  {(article.image || article.imageUrl || article.thumbnail) && (
                     <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
                       <img 
-                        src={article.image} 
+                        src={article.image || article.imageUrl || article.thumbnail} 
                         alt={article.title || 'AI News Image'} 
                         className="w-full h-full object-cover object-center" 
                       />
@@ -69,18 +74,18 @@ export default function NewsPage() {
                         {article.title}
                       </Link>
                     </h2>
-                    {article.summary && (
+                    {(article.summary || article.description || article.excerpt) && (
                       <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed mb-4">
-                        {article.summary}
+                        {article.summary || article.description || article.excerpt}
                       </p>
                     )}
                   </div>
                 </div>
 
-                {/* Footer with Exact Date Tag */}
+                {/* Explicit Date Markup for Search Engine Crawlers */}
                 <div className="px-6 pb-6 pt-0 flex items-center text-xs font-medium text-gray-500">
                   <span className="mr-1.5">🗓️</span>
-                  <time dateTime={articleDate || '2026-09-16'}>
+                  <time dateTime={rawDate || '2026-09-16'}>
                     {formattedDate}
                   </time>
                 </div>
