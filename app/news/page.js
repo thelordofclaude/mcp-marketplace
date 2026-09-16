@@ -14,92 +14,69 @@ export default function NewsPage() {
     articles = newsData.articles || newsData.data || newsData.items || Object.values(newsData).find(Array.isArray) || [];
   }
 
+  const getTitle = (item) => item?.title || item?.heading || item?.name || item?.headline || 'AI & MCP Article';
+  const getSummary = (item) => item?.summary || item?.description || item?.excerpt || item?.content || item?.details || '';
+  const getImage = (item) => item?.image || item?.imageUrl || item?.thumbnail || item?.img || '/logo.png';
+  const getSlug = (item, idx) => item?.slug || item?.id || idx;
+
   const formatDate = (rawDate) => {
     if (!rawDate) return 'Sep 16, 2026';
     try {
-      return new Date(rawDate).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      });
+      return new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     } catch (e) {
       return String(rawDate);
     }
   };
 
-  const getTitle = (item) => item?.title || item?.heading || item?.name || 'Untitled Article';
-  const getSummary = (item) => item?.summary || item?.description || item?.excerpt || item?.content || '';
-  const getImage = (item) => item?.image || item?.imageUrl || item?.thumbnail || item?.img || null;
-  const getSlug = (item, idx) => item?.slug || item?.id || idx;
-
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-12">
-        
-        {/* Header */}
-        <div className="text-center">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-4">
-            📰 AI News & Model Context Protocol Updates
-          </h1>
-          <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
-            Daily coverage of breaking AI developments, Anthropic Claude integrations, frontier LLMs, and MCP ecosystem advances.
-          </p>
-        </div>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 16px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      
+      {/* Page Title Header */}
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <h1 style={{ fontSize: '32px', fontWeight: '800', color: '#0f172a', marginBottom: '8px' }}>
+          📰 AI News & Model Context Protocol Updates
+        </h1>
+        <p style={{ fontSize: '15px', color: '#64748b', maxWidth: '650px', margin: '0 auto' }}>
+          Daily coverage of breaking AI developments, Anthropic Claude integrations, frontier LLMs, and MCP ecosystem advances.
+        </p>
+      </div>
 
-        {/* 21 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {articles.map((article, idx) => {
-            const slug = getSlug(article, idx);
-            const title = getTitle(article);
-            const summary = getSummary(article);
-            const img = getImage(article);
-            const rawDate = article.date || article.published_at || article.timestamp;
+      {/* Grid Rendering 21 Live Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+        {articles.map((article, idx) => {
+          const slug = getSlug(article, idx);
+          const rawDate = article.date || article.published_at || article.timestamp;
 
-            return (
-              <div 
-                key={slug} 
-                className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg transition flex flex-col justify-between"
-              >
-                <div>
-                  {img && (
-                    <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
-                      <img 
-                        src={img} 
-                        alt={title} 
-                        className="w-full h-full object-cover object-center" 
-                      />
-                      {article.category && (
-                        <span className="absolute bottom-3 left-3 bg-pink-100 text-pink-700 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wide">
-                          {article.category}
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="p-6 space-y-3">
-                    <h2 className="text-lg font-bold text-gray-900 line-clamp-2 hover:text-pink-600 transition">
-                      <Link href={`/news-article/${slug}`}>
-                        {title}
-                      </Link>
-                    </h2>
-                    {summary && (
-                      <p className="text-gray-600 text-xs sm:text-sm line-clamp-3 leading-relaxed">
-                        {summary}
-                      </p>
-                    )}
-                  </div>
+          return (
+            <div 
+              key={slug} 
+              style={{ border: '1px solid #e2e8f0', borderRadius: '16px', overflow: 'hidden', backgroundColor: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}
+            >
+              <div>
+                <div style={{ height: '160px', backgroundColor: '#f8fafc', overflow: 'hidden' }}>
+                  <img src={getImage(article)} alt={getTitle(article)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
 
-                <div className="px-6 pb-6 pt-0 flex items-center text-xs font-medium text-gray-400">
-                  <span className="mr-1.5">🗓️</span>
-                  <time dateTime={rawDate || '2026-09-16'}>
-                    {formatDate(rawDate)}
-                  </time>
+                <div style={{ padding: '20px' }}>
+                  <h2 style={{ fontSize: '17px', fontWeight: 'bold', margin: '0 0 10px 0', lineHeight: '1.4', color: '#0f172a' }}>
+                    <Link href={`/news-article/${slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      {getTitle(article)}
+                    </Link>
+                  </h2>
+                  {getSummary(article) && (
+                    <p style={{ fontSize: '13px', color: '#64748b', lineHeight: '1.5', margin: 0, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {getSummary(article)}
+                    </p>
+                  )}
                 </div>
               </div>
-            );
-          })}
-        </div>
+
+              <div style={{ padding: '0 20px 20px 20px', fontSize: '12px', color: '#94a3b8', fontWeight: '500' }}>
+                🗓️ <time dateTime={rawDate || '2026-09-16'}>{formatDate(rawDate)}</time>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
