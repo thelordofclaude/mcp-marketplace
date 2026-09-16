@@ -26,12 +26,13 @@ export default function HomePage() {
   };
 
   const featured = articles[0] || {};
-  const latestNews = articles.slice(1, 5);
+  // Takes ALL remaining articles (from index 1 to the end) instead of slicing only 4
+  const latestNews = articles.slice(1);
 
   return (
     <div style={{ width: '100%', padding: '24px 32px', boxSizing: 'border-box', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#0f172a' }}>
       
-      {/* Modern Enhanced Search Bar UI */}
+      {/* Search Bar UI */}
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px', width: '100%' }}>
         <form 
           onSubmit={(e) => e.preventDefault()}
@@ -43,12 +44,10 @@ export default function HomePage() {
             alignItems: 'center'
           }}
         >
-          {/* Search Icon */}
           <span style={{ position: 'absolute', left: '18px', fontSize: '16px', color: '#94a3b8', pointerEvents: 'none' }}>
             🔍
           </span>
 
-          {/* Search Input */}
           <input 
             type="text" 
             placeholder="Search Claude skills, MCP servers, plugins, tools..." 
@@ -62,12 +61,10 @@ export default function HomePage() {
               backgroundColor: '#ffffff',
               boxShadow: '0 8px 24px rgba(15, 23, 42, 0.04)',
               boxSizing: 'border-box',
-              color: '#0f172a',
-              transition: 'all 0.2s ease-in-out'
+              color: '#0f172a'
             }}
           />
 
-          {/* Keyboard Shortcut Badge */}
           <span style={{
             position: 'absolute',
             right: '100px',
@@ -83,7 +80,6 @@ export default function HomePage() {
             ⌘K
           </span>
 
-          {/* Action Search Button */}
           <button
             type="submit"
             style={{
@@ -206,19 +202,19 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Latest News & Cyan Newsletter */}
+      {/* Full Articles Section & Sidebar */}
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '28px' }}>
         
-        {/* Latest News Grid */}
+        {/* Complete Latest News Grid (Displays all remaining 20 articles) */}
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px', marginBottom: '20px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: '800', margin: 0 }}>Latest News</h2>
-            <Link href="/news" style={{ color: '#ec4899', textDecoration: 'none', fontWeight: '700', fontSize: '13px' }}>View All News &rarr;</Link>
+            <Link href="/news" style={{ color: '#ec4899', textDecoration: 'none', fontWeight: '700', fontSize: '13px' }}>View Dedicated News Page &rarr;</Link>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
             {latestNews.map((article, idx) => {
-              const slug = getSlug(article, idx);
+              const slug = getSlug(article, idx + 1);
               const title = getTitle(article);
               const img = getImage(article);
 
@@ -245,9 +241,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Newsletter Card */}
+        {/* Sticky Sidebar with Newsletter */}
         <div>
-          <div style={{ backgroundColor: '#00d8f6', borderRadius: '24px', padding: '28px', color: '#042f2e', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+          <div style={{ position: 'sticky', top: '80px', backgroundColor: '#00d8f6', borderRadius: '24px', padding: '28px', color: '#042f2e', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
             <h3 style={{ fontSize: '20px', fontWeight: '800', margin: '0 0 10px 0' }}>Join the Newsletter</h3>
             <p style={{ fontSize: '13px', margin: '0 0 20px 0', lineHeight: '1.5', color: '#083344', fontWeight: '500' }}>
               Subscribe for the latest Claude skills, MCP servers, and breaking AI updates.
