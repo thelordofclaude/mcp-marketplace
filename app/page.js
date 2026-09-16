@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 
-// Import manifest safely from the root directory
-import processedNews from '@/processed-news.json';
+// Import using relative path from app/page.js to the root folder
+import processedNews from '../processed-news.json';
 
 export default function HomePage() {
   const ids = processedNews?.ids || [];
