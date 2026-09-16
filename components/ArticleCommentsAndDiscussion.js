@@ -1,25 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function ArticleCommentsAndDiscussion({ initialComments = [] }) {
   const [comments, setComments] = useState(initialComments);
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState('');
-  const supabase = createClientComponentClient();
 
-  const handleSignIn = async () => {
-    // If you use Supabase Auth UI or OAuth provider (e.g. GitHub/Google)
-    try {
-      await supabase.auth.signInWithOAuth({
-        provider: 'github',
-        options: { redirectTo: `${window.location.origin}/auth/callback` }
-      });
-    } catch (error) {
-      // Fallback: click top header sign in button if present
-      const headerSignInBtn = document.querySelector('button:has-text("Sign In"), a[href*="signin"]');
-      if (headerSignInBtn) headerSignInBtn.click();
+  const handleSignIn = () => {
+    // Triggers the existing Sign In button in the header
+    const buttons = Array.from(document.querySelectorAll('button, a'));
+    const signInBtn = buttons.find(
+      (el) => el.textContent.trim().toLowerCase().includes('sign in') || el.getAttribute('href')?.includes('signin')
+    );
+
+    if (signInBtn) {
+      signInBtn.click();
     }
   };
 
