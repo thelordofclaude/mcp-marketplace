@@ -2,37 +2,46 @@ import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
 
-function getNewsArticles() {
-  const newsDir = path.join(process.cwd(), 'content', 'news');
-  if (!fs.existsSync(newsDir)) return [];
+export const revalidate = 60; // Enable incremental static regeneration
 
-  const fileNames = fs.readdirSync(newsDir);
-  return fileNames
-    .filter((file) => file.endsWith('.json') || file.endsWith('.md'))
-    .map((fileName) => {
+function getNewsArticles() {
+  try {
+    const newsDir = path.join(process.cwd(), 'content', 'news');
+    if (!fs.existsSync(newsDir)) return [];
+
+    // Read directory with limit to prevent execution timeouts
+    const fileNames = fs.readdirSync(newsDir).slice(0, 30);
+    
+    const articles = [];
+    for (const fileName of fileNames) {
+      if (!fileName.endsWith('.json') && !fileName.endsWith('.md')) continue;
+
       const filePath = path.join(newsDir, fileName);
       const rawContent = fs.readFileSync(filePath, 'utf8');
       const slug = fileName.replace(/\.(json|md)$/, '');
 
       try {
         const parsed = JSON.parse(rawContent);
-        return {
+        articles.push({
           slug: parsed.slug || slug,
           title: parsed.title || parsed.heading || parsed.headline || slug.replace(/-/g, ' '),
           summary: parsed.summary || parsed.description || parsed.excerpt || '',
           date: parsed.date || parsed.published_at || parsed.created_at || 'Sep 16, 2026',
-          image: parsed.image || parsed.imageUrl || null,
-        };
+        });
       } catch (e) {
-        return {
+        articles.push({
           slug,
           title: slug.replace(/-/g, ' '),
           summary: '',
           date: 'Sep 16, 2026',
-          image: null,
-        };
+        });
       }
-    });
+    }
+    return articles;
+  } catch (err) {
+    console.error("Error reading news directory:", err);
+    return [];
+  }
 }
 
 export default function HomePage() {
