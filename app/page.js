@@ -4,7 +4,6 @@ import newsData from '../processed-news.json';
 import Link from 'next/link';
 
 export default function HomePage() {
-  // Extract articles array safely regardless of JSON wrapper structure
   let articles = [];
   if (Array.isArray(newsData)) {
     articles = newsData;
@@ -12,115 +11,69 @@ export default function HomePage() {
     articles = newsData.articles || newsData.data || newsData.items || Object.values(newsData).find(Array.isArray) || [];
   }
 
-  const featured = articles[0] || {};
-  const latestNews = articles.slice(1, 5);
+  const getTitle = (item) => item?.title || item?.heading || item?.name || item?.headline || 'AI & Model Context Protocol News';
+  const getSummary = (item) => item?.summary || item?.description || item?.excerpt || item?.content || item?.details || '';
+  const getImage = (item) => item?.image || item?.imageUrl || item?.thumbnail || item?.img || '/logo.png';
+  const getSlug = (item, idx) => item?.slug || item?.id || idx;
 
   const formatDate = (rawDate) => {
     if (!rawDate) return 'Sep 16, 2026';
     try {
-      return new Date(rawDate).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      });
+      return new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     } catch (e) {
       return String(rawDate);
     }
   };
 
-  const getTitle = (item) => item?.title || item?.heading || item?.name || 'Untitled Article';
-  const getSummary = (item) => item?.summary || item?.description || item?.excerpt || item?.content || '';
-  const getImage = (item) => item?.image || item?.imageUrl || item?.thumbnail || item?.img || null;
-  const getSlug = (item, idx) => item?.slug || item?.id || idx;
+  const featured = articles[0] || {};
+  const latestNews = articles.slice(1, 5);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px 16px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       
-      {/* Search & Filter Header */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="relative w-full md:w-1/2">
-          <input 
-            type="text" 
-            placeholder="Search Claude skills, MCP servers, plugins, tools, and more..." 
-            className="w-full pl-10 pr-10 py-2.5 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"
-          />
-          <span className="absolute left-3.5 top-3 text-gray-400">🔍</span>
-          <button className="absolute right-2 top-1.5 bg-pink-500 text-white rounded-full p-1.5 text-xs">
-            ➔
-          </button>
-        </div>
+      {/* Search Bar */}
+      <div style={{ marginBottom: '20px' }}>
+        <input 
+          type="text" 
+          placeholder="Search Claude skills, MCP servers, plugins, tools, and more..." 
+          style={{ width: '100%', maxWidth: '500px', padding: '10px 18px', borderRadius: '24px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
+        />
       </div>
 
-      {/* Featured Server Pill Tags */}
-      <div className="flex items-center gap-3 overflow-x-auto pb-2 text-xs font-medium text-gray-700">
-        <span className="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5 cursor-pointer">
-          🔹 Context7 <span className="text-gray-400">MCP Server</span>
-        </span>
-        <span className="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5 cursor-pointer">
-          🦁 Brave Search <span className="text-gray-400">MCP Server</span>
-        </span>
-        <span className="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5 cursor-pointer">
-          🐙 GitHub <span className="text-gray-400">MCP Server</span>
-        </span>
-        <span className="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5 cursor-pointer">
-          ⚡ Supabase <span className="text-gray-400">MCP Server</span>
-        </span>
-        <span className="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5 cursor-pointer">
-          📝 Notion <span className="text-gray-400">MCP Server</span>
-        </span>
-      </div>
-
-      {/* Hero Section & Top Trending Sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Hero Featured Tile + Top Trending Sidebar */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', marginBottom: '32px' }}>
         
-        {/* Main Featured Hero Card */}
-        <div className="lg:col-span-8 bg-slate-950 text-white rounded-3xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden min-h-[380px]">
-          <div className="z-10 max-w-xl">
-            <span className="inline-block bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-4">
+        {/* Hero Banner */}
+        <div style={{ flex: '2 1 600px', backgroundColor: '#090d16', borderRadius: '24px', padding: '32px', color: '#fff', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyBetween: 'space-between', minHeight: '340px' }}>
+          <div style={{ zIndex: 2, maxWidth: '550px' }}>
+            <span style={{ backgroundColor: '#db2777', color: '#fff', fontSize: '11px', fontWeight: 'bold', padding: '4px 12px', borderRadius: '12px', textTransform: 'uppercase' }}>
               {featured.category || 'FEATURED'}
             </span>
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-4">
-              <Link href={`/news-article/${getSlug(featured, 0)}`} className="hover:underline">
+            <h1 style={{ fontSize: '30px', fontWeight: '800', marginTop: '16px', marginBottom: '12px', lineHeight: '1.2' }}>
+              <Link href={`/news-article/${getSlug(featured, 0)}`} style={{ color: '#fff', textDecoration: 'none' }}>
                 {getTitle(featured)}
               </Link>
             </h1>
             {getSummary(featured) && (
-              <p className="text-gray-300 text-sm sm:text-base line-clamp-3 mb-6">
+              <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: '1.5', marginBottom: '24px' }}>
                 {getSummary(featured)}
               </p>
             )}
-            
-            <div className="flex flex-wrap items-center gap-3">
-              <Link 
-                href={`/news-article/${getSlug(featured, 0)}`} 
-                className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition"
-              >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <Link href={`/news-article/${getSlug(featured, 0)}`} style={{ backgroundColor: '#db2777', color: '#fff', padding: '10px 20px', borderRadius: '10px', textDecoration: 'none', fontWeight: 'bold', fontSize: '14px' }}>
                 Read Full Story
               </Link>
-              <span className="text-xs text-gray-400">
+              <span style={{ fontSize: '13px', color: '#64748b' }}>
                 🗓️ {formatDate(featured.date || featured.published_at)}
               </span>
             </div>
           </div>
-
-          {getImage(featured) && (
-            <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-30 lg:opacity-60 pointer-events-none">
-              <img src={getImage(featured)} alt={getTitle(featured)} className="w-full h-full object-cover" />
-            </div>
-          )}
         </div>
 
-        {/* Sidebar: Top Trending */}
-        <div className="lg:col-span-4 bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-gray-900 text-base">Top Trending</h3>
-            <div className="flex bg-gray-100 rounded-lg p-1 text-xs font-semibold">
-              <button className="bg-pink-600 text-white px-2.5 py-1 rounded-md">MCP Servers</button>
-              <button className="text-gray-600 px-2.5 py-1">Skills</button>
-            </div>
-          </div>
-
-          <div className="space-y-4 text-sm">
+        {/* Top Trending Sidebar */}
+        <div style={{ flex: '1 1 300px', backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '24px', padding: '24px' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 'bold', margin: '0 0 16px 0', color: '#0f172a' }}>Top Trending</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
               { rank: 1, name: 'Context7', cat: 'Development', count: '2,390', growth: '+18.2%' },
               { rank: 2, name: 'Brave Search', cat: 'Search', count: '2,300', growth: '+18.2%' },
@@ -128,17 +81,14 @@ export default function HomePage() {
               { rank: 4, name: 'GitHub', cat: 'Development', count: '2,300', growth: '+24.8%' },
               { rank: 5, name: 'Notion', cat: 'Productivity', count: '1,800', growth: '+18.5%' },
             ].map((item) => (
-              <div key={item.rank} className="flex items-center justify-between border-b border-gray-50 pb-2.5">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold text-gray-400">{item.rank}</span>
-                  <div>
-                    <p className="font-semibold text-gray-900">{item.name}</p>
-                    <p className="text-xs text-gray-400">{item.cat}</p>
-                  </div>
+              <div key={item.rank} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f1f5f9', pb: '8px' }}>
+                <div>
+                  <span style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '14px' }}>{item.rank}. {item.name}</span>
+                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>{item.cat}</div>
                 </div>
-                <div className="text-right text-xs">
-                  <p className="font-bold text-gray-900">{item.count}</p>
-                  <p className="text-emerald-500 font-medium">{item.growth}</p>
+                <div style={{ textAlign: 'right', fontSize: '12px' }}>
+                  <div style={{ fontWeight: 'bold', color: '#0f172a' }}>{item.count}</div>
+                  <div style={{ color: '#10b981', fontWeight: 'bold' }}>{item.growth}</div>
                 </div>
               </div>
             ))}
@@ -146,52 +96,38 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Latest News Grid & Newsletter Widget */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Latest News Grid + Newsletter Sidebar */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px' }}>
         
-        {/* News Cards */}
-        <div className="lg:col-span-8 space-y-4">
-          <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-            <h2 className="text-xl font-bold text-gray-900">Latest News</h2>
-            <Link href="/news" className="text-xs font-bold text-pink-600 hover:text-pink-700">
-              View All News &rarr;
-            </Link>
+        {/* Cards */}
+        <div style={{ flex: '2 1 600px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', margin: 0, color: '#0f172a' }}>Latest News</h2>
+            <Link href="/news" style={{ color: '#db2777', textDecoration: 'none', fontWeight: 'bold', fontSize: '13px' }}>View All News &rarr;</Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px' }}>
             {latestNews.map((article, idx) => {
               const slug = getSlug(article, idx);
-              const title = getTitle(article);
-              const summary = getSummary(article);
-              const img = getImage(article);
-
               return (
-                <div key={slug} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                <div key={slug} style={{ border: '1px solid #e2e8f0', borderRadius: '16px', overflow: 'hidden', backgroundColor: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    {img && (
-                      <div className="h-44 w-full bg-gray-100 overflow-hidden relative">
-                        <img src={img} alt={title} className="w-full h-full object-cover" />
-                        <span className="absolute top-3 left-3 bg-pink-100 text-pink-700 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase">
-                          {article.category || 'NEWS'}
-                        </span>
-                      </div>
-                    )}
-                    <div className="p-4">
-                      <h3 className="font-bold text-gray-900 text-base line-clamp-2 hover:text-pink-600 transition mb-2">
-                        <Link href={`/news-article/${slug}`}>
-                          {title}
+                    <div style={{ height: '140px', backgroundColor: '#f8fafc', overflow: 'hidden' }}>
+                      <img src={getImage(article)} alt={getTitle(article)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <div style={{ padding: '16px' }}>
+                      <h3 style={{ fontSize: '15px', fontWeight: 'bold', margin: '0 0 8px 0', lineHeight: '1.4', color: '#0f172a' }}>
+                        <Link href={`/news-article/${slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                          {getTitle(article)}
                         </Link>
                       </h3>
-                      {summary && (
-                        <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">
-                          {summary}
-                        </p>
-                      )}
+                      <p style={{ fontSize: '12px', color: '#64748b', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {getSummary(article)}
+                      </p>
                     </div>
                   </div>
-
-                  <div className="p-4 pt-0 text-xs text-gray-400 flex items-center">
-                    🗓️ <span className="ml-1">{formatDate(article.date || article.published_at)}</span>
+                  <div style={{ padding: '0 16px 16px 16px', fontSize: '12px', color: '#94a3b8' }}>
+                    🗓️ {formatDate(article.date || article.published_at)}
                   </div>
                 </div>
               );
@@ -199,23 +135,18 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Sidebar: Newsletter Signup Form */}
-        <div className="lg:col-span-4">
-          <div className="bg-cyan-400 text-white rounded-3xl p-6 shadow-sm space-y-4">
-            <h3 className="text-xl font-bold">Join the Newsletter</h3>
-            <p className="text-xs text-cyan-900 font-medium">
-              Subscribe for the latest Claude skills, MCP servers, and breaking AI updates.
-            </p>
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
+        {/* Newsletter Sidebar */}
+        <div style={{ flex: '1 1 300px' }}>
+          <div style={{ backgroundColor: '#22d3ee', borderRadius: '24px', padding: '24px', color: '#083344' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginTop: 0, marginBottom: '8px' }}>Join the Newsletter</h3>
+            <p style={{ fontSize: '12px', marginBottom: '16px', lineHeight: '1.4' }}>Subscribe for the latest Claude skills, MCP servers, and breaking AI updates.</p>
+            <form onSubmit={(e) => e.preventDefault()}>
               <input 
                 type="email" 
                 placeholder="Email Address" 
-                className="w-full px-4 py-2.5 rounded-xl text-gray-900 placeholder-gray-400 text-sm focus:outline-none"
+                style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: 'none', fontSize: '13px', marginBottom: '10px', outline: 'none' }}
               />
-              <button 
-                type="submit" 
-                className="w-full bg-cyan-300 hover:bg-cyan-200 text-cyan-950 font-bold py-2.5 rounded-xl text-sm transition"
-              >
+              <button type="submit" style={{ width: '100%', backgroundColor: '#67e8f9', color: '#042f2e', fontWeight: 'bold', padding: '10px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '13px' }}>
                 SUBSCRIBE
               </button>
             </form>
