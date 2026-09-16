@@ -4,7 +4,6 @@ import newsData from '../processed-news.json';
 import Link from 'next/link';
 
 export default function HomePage() {
-  // Extract articles array regardless of JSON wrap structure
   let articles = [];
   if (Array.isArray(newsData)) {
     articles = newsData;
@@ -12,7 +11,6 @@ export default function HomePage() {
     articles = newsData.articles || newsData.data || newsData.items || Object.values(newsData).find(Array.isArray) || [];
   }
 
-  // Dynamic property resolvers
   const getTitle = (item) => item?.title || item?.heading || item?.name || item?.headline || item?.topic || 'AI & Model Context Protocol News';
   const getSummary = (item) => item?.summary || item?.description || item?.excerpt || item?.content || item?.body || '';
   const getImage = (item) => item?.image || item?.imageUrl || item?.thumbnail || item?.img || item?.cover || null;
@@ -31,19 +29,35 @@ export default function HomePage() {
   const latestNews = articles.slice(1, 5);
 
   return (
-    <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '24px 16px', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#0f172a' }}>
+    <div style={{ width: '100%', maxWidth: '100%', padding: '24px 32px', boxSizing: 'border-box', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#0f172a' }}>
       
-      {/* Centered Search Bar */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
-        <input 
-          type="text" 
-          placeholder="Search Claude skills, MCP servers, plugins, tools, and more..." 
-          style={{ width: '100%', maxWidth: '480px', padding: '10px 20px', borderRadius: '9999px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none', boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
-        />
+      {/* Improvised Search Bar */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+        <div style={{ position: 'relative', width: '100%', maxWidth: '640px' }}>
+          <span style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', fontSize: '15px', color: '#94a3b8' }}>
+            🔍
+          </span>
+          <input 
+            type="text" 
+            placeholder="Search Claude skills, MCP servers, plugins, tools, and more..." 
+            style={{ 
+              width: '100%', 
+              padding: '12px 20px 12px 48px', 
+              borderRadius: '9999px', 
+              border: '1.5px solid #e2e8f0', 
+              fontSize: '14px', 
+              outline: 'none', 
+              backgroundColor: '#ffffff',
+              boxShadow: '0 4px 12px rgba(15, 23, 42, 0.03)',
+              boxSizing: 'border-box',
+              transition: 'all 0.2s ease'
+            }}
+          />
+        </div>
       </div>
 
-      {/* Featured MCP Pills */}
-      <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '32px', paddingBottom: '4px' }}>
+      {/* Improvised Category Tiles Section */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '32px' }}>
         {[
           { icon: '🔹', name: 'Context7', tag: 'MCP Server' },
           { icon: '🦁', name: 'Brave Search', tag: 'MCP Server' },
@@ -51,18 +65,36 @@ export default function HomePage() {
           { icon: '⚡', name: 'Supabase', tag: 'MCP Server' },
           { icon: '📝', name: 'Notion', tag: 'MCP Server' }
         ].map((item, idx) => (
-          <div key={idx} style={{ backgroundColor: '#f8fafc', border: '1px solid #f1f5f9', padding: '6px 14px', borderRadius: '12px', fontSize: '13px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', cursor: 'pointer' }}>
-            <span>{item.icon}</span> <span>{item.name}</span> <span style={{ color: '#94a3b8', fontWeight: '400' }}>{item.tag}</span>
+          <div 
+            key={idx} 
+            style={{ 
+              backgroundColor: '#f8fafc', 
+              border: '1px solid #e2e8f0', 
+              padding: '7px 16px', 
+              borderRadius: '9999px', 
+              fontSize: '13px', 
+              fontWeight: '600', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '6px', 
+              cursor: 'pointer',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.02)',
+              transition: 'transform 0.15s ease, background-color 0.15s ease'
+            }}
+          >
+            <span style={{ fontSize: '14px' }}>{item.icon}</span> 
+            <span style={{ color: '#0f172a' }}>{item.name}</span> 
+            <span style={{ color: '#64748b', fontWeight: '500', fontSize: '12px' }}>{item.tag}</span>
           </div>
         ))}
       </div>
 
-      {/* Hero Banner + Sidebar */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '24px', marginBottom: '40px' }}>
+      {/* Main Container Layout */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '28px', marginBottom: '40px' }}>
         
         {/* Main Hero Card */}
-        <div style={{ gridColumn: 'span 8', backgroundColor: '#090d16', borderRadius: '24px', padding: '36px', color: '#ffffff', position: 'relative', overflow: 'hidden', minHeight: '340px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          <div style={{ zIndex: 2, maxWidth: '540px' }}>
+        <div style={{ backgroundColor: '#090d16', borderRadius: '24px', padding: '36px', color: '#ffffff', position: 'relative', overflow: 'hidden', minHeight: '340px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ zIndex: 2, maxWidth: '580px' }}>
             <span style={{ backgroundColor: '#ec4899', color: '#ffffff', fontSize: '11px', fontWeight: '800', padding: '4px 12px', borderRadius: '9999px', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'inline-block', marginBottom: '16px' }}>
               {featured.category || 'FEATURED'}
             </span>
@@ -91,7 +123,7 @@ export default function HomePage() {
         </div>
 
         {/* Top Trending Sidebar */}
-        <div style={{ gridColumn: 'span 4', backgroundColor: '#ffffff', border: '1px solid #f1f5f9', borderRadius: '24px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+        <div style={{ backgroundColor: '#ffffff', border: '1px solid #f1f5f9', borderRadius: '24px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <h3 style={{ fontSize: '16px', fontWeight: '800', margin: 0 }}>Top Trending</h3>
             <div style={{ backgroundColor: '#f8fafc', padding: '3px', borderRadius: '8px', display: 'flex', gap: '4px' }}>
@@ -127,10 +159,10 @@ export default function HomePage() {
       </div>
 
       {/* Latest News & Newsletter Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '28px' }}>
         
         {/* News Grid Column */}
-        <div style={{ gridColumn: 'span 8' }}>
+        <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px', marginBottom: '20px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: '800', margin: 0 }}>Latest News</h2>
             <Link href="/news" style={{ color: '#ec4899', textDecoration: 'none', fontWeight: '700', fontSize: '13px' }}>View All News &rarr;</Link>
@@ -166,7 +198,7 @@ export default function HomePage() {
         </div>
 
         {/* Newsletter Signup Widget */}
-        <div style={{ gridColumn: 'span 4' }}>
+        <div>
           <div style={{ backgroundColor: '#00d8f6', borderRadius: '24px', padding: '28px', color: '#042f2e', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
             <h3 style={{ fontSize: '20px', fontWeight: '800', margin: '0 0 10px 0' }}>Join the Newsletter</h3>
             <p style={{ fontSize: '13px', margin: '0 0 20px 0', lineHeight: '1.5', color: '#083344', fontWeight: '500' }}>
