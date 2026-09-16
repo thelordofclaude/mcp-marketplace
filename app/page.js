@@ -2,7 +2,6 @@ import newsData from '../processed-news.json';
 import Link from 'next/link';
 
 export default function HomePage() {
-  // Extract live articles defensively
   let articles = [];
   if (Array.isArray(newsData)) {
     articles = newsData;
@@ -10,15 +9,7 @@ export default function HomePage() {
     articles = newsData.articles || newsData.data || newsData.items || Object.values(newsData).find(Array.isArray) || [];
   }
 
-  // Assign live featured article and latest news items
-  const featuredArticle = articles[0] || {
-    title: 'Context7 MCP Server Raises $3M Seed Round',
-    summary: 'The open-source MCP server for up-to-date documentation and code examples.',
-    slug: 'context7-mcp-server',
-    date: 'Sep 16, 2026',
-    category: 'FEATURED'
-  };
-
+  const featuredArticle = articles[0] || {};
   const latestNews = articles.slice(1, 5);
 
   const formatDate = (rawDate) => {
@@ -34,96 +25,96 @@ export default function HomePage() {
     }
   };
 
+  const featuredSlug = featuredArticle.slug || featuredArticle.id || '';
+  const featuredImage = featuredArticle.image || featuredArticle.imageUrl || '/logo.png';
+  const featuredTitle = featuredArticle.title || 'Context7 MCP Server Raises $3M Seed Round';
+  const featuredSummary = featuredArticle.summary || featuredArticle.description || 'The open-source MCP server for up-to-date documentation and code examples.';
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
-        
-        {/* Main Hero Featured Article Tile */}
-        <section className="relative rounded-3xl overflow-hidden bg-slate-900 text-white shadow-xl grid grid-cols-1 lg:grid-cols-12">
-          <div className="lg:col-span-7 p-8 lg:p-12 flex flex-col justify-between space-y-6">
-            <div>
-              <span className="inline-block bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
-                {featuredArticle.category || 'FEATURED'}
-              </span>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
-                <Link href={`/news-article/${featuredArticle.slug || featuredArticle.id || ''}`} className="hover:underline">
-                  {featuredArticle.title}
+    <div>
+      {/* Featured Main Hero Tile */}
+      {featuredArticle && (
+        <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            backgroundColor: '#0f172a',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            color: '#fff'
+          }}>
+            <div style={{ flex: '1 1 400px', padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'between' }}>
+              <div>
+                <span style={{ backgroundColor: '#db2777', color: '#fff', fontSize: '12px', fontWeight: 'bold', padding: '4px 12px', borderRadius: '12px', textTransform: 'uppercase' }}>
+                  {featuredArticle.category || 'FEATURED'}
+                </span>
+                <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginTop: '16px', marginBottom: '12px', lineHeight: '1.3' }}>
+                  <Link href={`/news-article/${featuredSlug}`} style={{ color: '#fff', textDecoration: 'none' }}>
+                    {featuredTitle}
+                  </Link>
+                </h1>
+                <p style={{ color: '#cbd5e1', fontSize: '15px', lineHeight: '1.5', marginBottom: '20px' }}>
+                  {featuredSummary}
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: 'auto' }}>
+                <Link href={`/news-article/${featuredSlug}`} style={{ backgroundColor: '#db2777', color: '#fff', textDecoration: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px' }}>
+                  Read Full Story
                 </Link>
-              </h1>
-              <p className="mt-4 text-slate-300 text-base sm:text-lg line-clamp-3">
-                {featuredArticle.summary || featuredArticle.description}
-              </p>
+                <span style={{ fontSize: '13px', color: '#94a3b8' }}>
+                  🗓️ {formatDate(featuredArticle.date || featuredArticle.published_at)}
+                </span>
+              </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 pt-4">
-              <Link 
-                href={`/news-article/${featuredArticle.slug || featuredArticle.id || ''}`}
-                className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
-              >
-                Read Full Story
-              </Link>
-              <span className="text-sm text-slate-400 flex items-center">
-                🗓️ {formatDate(featuredArticle.date || featuredArticle.published_at)}
-              </span>
+            <div style={{ flex: '1 1 300px', minHeight: '250px', maxHeight: '350px', overflow: 'hidden' }}>
+              <img src={featuredImage} alt={featuredTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
           </div>
+        </div>
+      )}
 
-          <div className="lg:col-span-5 relative min-h-[300px] bg-slate-800">
-            <img 
-              src={featuredArticle.image || featuredArticle.imageUrl || '/logo.png'} 
-              alt={featuredArticle.title} 
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </section>
+      {/* Small Latest News Grid */}
+      <div style={{ maxWidth: '1200px', margin: '30px auto', padding: '0 20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+          <h2 style={{ fontSize: '22px', fontStyle: 'normal', fontWeight: 'bold', color: '#0f172a', margin: 0 }}>Latest News</h2>
+          <Link href="/news" style={{ color: '#db2777', fontWeight: 'bold', textDecoration: 'none', fontSize: '14px' }}>
+            View All News &rarr;
+          </Link>
+        </div>
 
-        {/* Latest News Grid Section */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-            <h2 className="text-2xl font-bold text-gray-900">Latest News</h2>
-            <Link href="/news" className="text-pink-600 hover:text-pink-700 text-sm font-semibold">
-              View All News &rarr;
-            </Link>
-          </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
+          {latestNews.map((article, idx) => {
+            const slug = article.slug || article.id || idx;
+            const title = article.title || '';
+            const img = article.image || article.imageUrl || '/logo.png';
+            const cat = article.category || 'AI NEWS';
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {latestNews.map((article, idx) => {
-              const slug = article.slug || article.id || idx;
-              return (
-                <div key={slug} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-                  <div>
-                    <div className="relative h-44 w-full bg-gray-100 overflow-hidden">
-                      <img 
-                        src={article.image || article.imageUrl || '/logo.png'} 
-                        alt={article.title} 
-                        className="w-full h-full object-cover"
-                      />
-                      <span className="absolute top-3 left-3 bg-pink-100 text-pink-700 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase">
-                        {article.category || 'AI NEWS'}
-                      </span>
-                    </div>
-
-                    <div className="p-4">
-                      <h3 className="font-bold text-gray-900 text-base line-clamp-2 hover:text-blue-600 transition-colors">
-                        <Link href={`/news-article/${slug}`}>
-                          {article.title}
-                        </Link>
-                      </h3>
-                    </div>
+            return (
+              <div key={slug} style={{ border: '1px solid #e2e8f0', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ height: '140px', overflow: 'hidden', position: 'relative', backgroundColor: '#f1f5f9' }}>
+                    <img src={img} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <span style={{ position: 'absolute', top: '8px', left: '8px', backgroundColor: '#fce7f3', color: '#be185d', fontSize: '10px', fontWeight: 'bold', padding: '2px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>
+                      {cat}
+                    </span>
                   </div>
-
-                  <div className="p-4 pt-0 text-xs text-gray-500 flex items-center">
-                    <span className="mr-1">🗓️</span>
-                    <time dateTime={article.date || '2026-09-16'}>
-                      {formatDate(article.date || article.published_at)}
-                    </time>
+                  <div style={{ padding: '14px' }}>
+                    <h3 style={{ fontSize: '15px', fontWeight: 'bold', margin: '0 0 8px 0', lineHeight: '1.4', color: '#0f172a' }}>
+                      <Link href={`/news-article/${slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        {title}
+                      </Link>
+                    </h3>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        </section>
-
+                <div style={{ padding: '0 14px 14px 14px', fontSize: '12px', color: '#64748b' }}>
+                  🗓️ {formatDate(article.date || article.published_at)}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
