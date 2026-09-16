@@ -1,75 +1,60 @@
-import newsData from '../../processed-news.json';
+import fs from 'fs';
+import path from 'path';
 import Link from 'next/link';
 
-export const metadata = {
-  title: 'Latest AI News, Claude Updates & Model Context Protocol Breakthroughs',
-  description: 'Daily coverage of breaking AI developments, Anthropic Claude integrations, frontier LLMs, and MCP ecosystem advances.',
-};
+function getNewsArticles() {
+  const newsDir = path.join(process.cwd(), 'content', 'news');
+  if (!fs.existsSync(newsDir)) return [];
 
-export default function NewsPage() {
-  let articles = [];
-  if (Array.isArray(newsData)) {
-    articles = newsData;
-  } else if (newsData && typeof newsData === 'object') {
-    articles = newsData.articles || newsData.data || newsData.items || Object.values(newsData).find(Array.isArray) || [];
-  }
+  const fileNames = fs.readdirSync(newsDir);
+  return fileNames
+    .filter((file) => file.endsWith('.json') || file.endsWith('.md'))
+    .map((fileName) => {
+      const filePath = path.join(newsDir, fileName);
+      const rawContent = fs.readFileSync(filePath, 'utf8');
+      const slug = fileName.replace(/\.(json|md)$/, '');
 
-  const getTitle = (item) => item?.title || item?.heading || item?.name || item?.headline || item?.topic || 'AI & MCP Article';
-  const getImage = (item) => item?.image || item?.imageUrl || item?.thumbnail || item?.img || item?.cover || null;
-  const getSlug = (item, idx) => item?.slug || item?.id || idx;
+      try {
+        const parsed = JSON.parse(rawContent);
+        return {
+          slug: parsed.slug || slug,
+          title: parsed.title || parsed.heading || parsed.headline || slug.replace(/-/g, ' '),
+          summary: parsed.summary || parsed.description || parsed.excerpt || '',
+          date: parsed.date || parsed.published_at || parsed.created_at || 'Sep 16, 2026',
+        };
+      } catch (e) {
+        return {
+          slug,
+          title: slug.replace(/-/g, ' '),
+          summary: '',
+          date: 'Sep 16, 2026',
+        };
+      }
+    });
+}
 
-  const formatDate = (rawDate) => {
-    if (!rawDate) return 'Sep 16, 2026';
-    try {
-      return new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    } catch (e) {
-      return String(rawDate);
-    }
-  };
+export default function DedicatedNewsPage() {
+  const articles = getNewsArticles();
 
   return (
-    <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '40px 16px', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#0f172a' }}>
-      
-      {/* Centered Page Header */}
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 24px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '32px', fontWeight: '800', margin: '0 0 8px 0', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-          <span>📰</span> AI News & Model Context Protocol Updates
-        </h1>
-        <p style={{ fontSize: '14px', color: '#64748b', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5' }}>
-          Daily coverage of breaking AI developments, Anthropic Claude integrations, frontier LLMs, and MCP ecosystem advances.
-        </p>
+        <h1 style={{ fontSize: '36px', fontWeight: '800', margin: '0 0 12px 0' }}>📰 AI News & MCP Protocol Updates</h1>
+        <p style={{ color: '#64748b', fontSize: '16px' }}>All {articles.length} breaking news articles generated on the platform.</p>
       </div>
 
-      {/* Grid Rendering Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
-        {articles.map((article, idx) => {
-          const slug = getSlug(article, idx);
-          const title = getTitle(article);
-          const img = getImage(article);
-          const rawDate = article.date || article.published_at || article.timestamp;
-
-          return (
-            <Link key={slug} href={`/news-article/${slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-              <div style={{ border: '1px solid #f1f5f9', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
-                <div>
-                  <div style={{ height: '180px', backgroundColor: '#6b21a8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: '800', textAlign: 'center', padding: '16px', fontSize: '20px', letterSpacing: '0.5px' }}>
-                    {img ? <img src={img} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : 'LORD OF CLAUDE'}
-                  </div>
-
-                  <div style={{ padding: '20px' }}>
-                    <h2 style={{ fontSize: '15px', fontWeight: '700', margin: '0 0 8px 0', lineHeight: '1.4' }}>
-                      {title}
-                    </h2>
-                  </div>
-                </div>
-
-                <div style={{ padding: '0 20px 20px 20px', fontSize: '12px', color: '#94a3b8' }}>
-                  🗓️ <time dateTime={rawDate || '2026-09-16'}>{formatDate(rawDate)}</time>
-                </div>
+        {articles.map((article) => (
+          <Link key={article.slug} href={`/news-article/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <div style={{ border: '1px solid #e2e8f0', borderRadius: '20px', backgroundColor: '#ffffff', padding: '24px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <h2 style={{ fontSize: '16px', fontWeight: '700', margin: '0 0 10px 0', lineHeight: '1.4' }}>{article.title}</h2>
+                {article.summary && <p style={{ fontSize: '13px', color: '#64748b', lineHeight: '1.5', margin: 0 }}>{article.summary}</p>}
               </div>
-            </Link>
-          );
-        })}
+              <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '16px' }}>🗓️ {article.date}</div>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );
