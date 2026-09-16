@@ -36,12 +36,12 @@ export default function HomePage() {
         <div style={{ backgroundColor: '#090d16', borderRadius: '24px', padding: '36px', color: '#ffffff', marginBottom: '32px', position: 'relative', overflow: 'hidden' }}>
           <span style={{ backgroundColor: '#ec4899', color: '#ffffff', fontSize: '11px', fontWeight: '800', padding: '4px 12px', borderRadius: '9999px', textTransform: 'uppercase', display: 'inline-block', marginBottom: '16px' }}>FEATURED</span>
           <h1 style={{ fontSize: '32px', fontWeight: '800', margin: '0 0 12px 0' }}>
-            <Link href={`/news/${featured.slug}`} style={{ color: '#ffffff', textDecoration: 'none' }}>
+            <Link href={`/news-article/${featured.slug}`} style={{ color: '#ffffff', textDecoration: 'none' }}>
               {featured.title}
             </Link>
           </h1>
           <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.6', margin: '0 0 24px 0' }}>{featured.description || featured.summary}</p>
-          <Link href={`/news/${featured.slug}`} style={{ backgroundColor: '#ec4899', color: '#ffffff', padding: '10px 22px', borderRadius: '12px', textDecoration: 'none', fontWeight: '700', fontSize: '14px', display: 'inline-block' }}>Read Story</Link>
+          <Link href={`/news-article/${featured.slug}`} style={{ backgroundColor: '#ec4899', color: '#ffffff', padding: '10px 22px', borderRadius: '12px', textDecoration: 'none', fontWeight: '700', fontSize: '14px', display: 'inline-block' }}>Read Story</Link>
         </div>
       )}
 
@@ -49,7 +49,7 @@ export default function HomePage() {
       <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', marginBottom: '40px', background: '#f8fafc', padding: '12px 0', border: '1px solid #e2e8f0', borderRadius: '16px' }}>
         <div style={{ display: 'inline-flex', gap: '16px', animation: 'marquee 25s linear infinite' }}>
           {[...tickerItems, ...tickerItems].map((item, i) => (
-            <Link key={i} href={`/news/${item.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link key={i} href={`/news-article/${item.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div style={{ minWidth: '260px', padding: '10px 16px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '12px', display: 'inline-block' }}>
                 <span style={{ fontSize: '11px', fontWeight: '700', color: '#ec4899', display: 'block' }}>⚡ BREAKING</span>
                 <span style={{ fontSize: '13px', fontWeight: '700', color: '#0f172a', whiteSpace: 'normal', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
@@ -70,7 +70,7 @@ export default function HomePage() {
       {/* Grid of Articles */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
         {latestNews.map((article) => (
-          <Link key={article.slug} href={`/news/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link key={article.slug} href={`/news-article/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <div style={{ border: '1px solid #e2e8f0', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff', padding: '20px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 {article.image && (
