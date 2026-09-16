@@ -1,4 +1,4 @@
-import newsArticles from '../../processed-news.json';
+import newsData from '@/processed-news.json';
 import Link from 'next/link';
 
 export const metadata = {
@@ -7,83 +7,87 @@ export const metadata = {
 };
 
 export default function NewsPage() {
-  const articles = Array.isArray(newsArticles) ? newsArticles : [];
+  const articles = Array.isArray(newsData) ? newsData : (newsData?.articles || []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Header Section Optimized for SEO */}
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold tracking-tight text-gray-900 mb-3">
-          📰 AI News & Model Context Protocol Updates
-        </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Daily coverage of breaking AI developments, Anthropic Claude integrations, frontier LLMs, and MCP ecosystem advances.
-        </p>
-      </div>
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* SEO Header Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl tracking-tight mb-4">
+            📰 AI News & Model Context Protocol Updates
+          </h1>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            Daily coverage of breaking AI developments, Anthropic Claude integrations, frontier LLMs, and MCP ecosystem advances.
+          </p>
+        </div>
 
-      {/* News Article Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articles.map((article, idx) => {
-          const slug = article.slug || article.id;
-          
-          // Format exact date or fall back to current date string
-          const formattedDate = article.date || article.published_at 
-            ? new Date(article.date || article.published_at).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-              })
-            : new Date().toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-              });
+        {/* Article Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {articles.map((article, idx) => {
+            const slug = article.slug || article.id || idx;
+            const articleDate = article.date || article.published_at || article.timestamp;
 
-          return (
-            <div 
-              key={idx} 
-              className="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow bg-white flex flex-col justify-between"
-            >
-              <div>
-                {article.image && (
-                  <div className="relative w-full h-48 bg-gray-100">
-                    <img 
-                      src={article.image} 
-                      alt={article.title} 
-                      className="w-full h-full object-cover" 
-                    />
-                    {article.category && (
-                      <span className="absolute bottom-2 left-2 bg-pink-100 text-pink-700 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                        {article.category}
-                      </span>
+            // Format exact dates safely
+            let formattedDate = 'Sep 16, 2026';
+            if (articleDate) {
+              try {
+                formattedDate = new Date(articleDate).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                });
+              } catch (e) {
+                formattedDate = String(articleDate);
+              }
+            }
+
+            return (
+              <div 
+                key={slug} 
+                className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between"
+              >
+                <div>
+                  {article.image && (
+                    <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
+                      <img 
+                        src={article.image} 
+                        alt={article.title || 'AI News Image'} 
+                        className="w-full h-full object-cover object-center" 
+                      />
+                      {article.category && (
+                        <span className="absolute bottom-3 left-3 bg-pink-100 text-pink-700 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wide">
+                          {article.category}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="p-6">
+                    <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-blue-600 transition-colors">
+                      <Link href={`/news-article/${slug}`}>
+                        {article.title}
+                      </Link>
+                    </h2>
+                    {article.summary && (
+                      <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed mb-4">
+                        {article.summary}
+                      </p>
                     )}
                   </div>
-                )}
-                
-                <div className="p-5">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                    <Link href={`/news-article/${slug}`} className="hover:text-blue-600">
-                      {article.title}
-                    </Link>
-                  </h2>
-                  {article.summary && (
-                    <p className="text-sm text-gray-600 line-clamp-3 mb-4">
-                      {article.summary}
-                    </p>
-                  )}
+                </div>
+
+                {/* Footer with Exact Date Tag */}
+                <div className="px-6 pb-6 pt-0 flex items-center text-xs font-medium text-gray-500">
+                  <span className="mr-1.5">🗓️</span>
+                  <time dateTime={articleDate || '2026-09-16'}>
+                    {formattedDate}
+                  </time>
                 </div>
               </div>
-
-              {/* Exact Date Footer */}
-              <div className="px-5 pb-5 pt-0 flex items-center text-xs text-gray-500">
-                <span className="mr-1">🗓️</span>
-                <time dateTime={article.date || article.published_at || new Date().toISOString()}>
-                  {formattedDate}
-                </time>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
