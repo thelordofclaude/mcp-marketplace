@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Latest AI News, Claude Updates & Model Context Protocol Breakthroughs',
-  description: 'Daily breaking news, expert analysis, and updates covering Anthropic Claude, Model Context Protocol (MCP), frontier AI models, and machine learning infrastructure.',
+  description: 'Daily coverage of breaking AI developments, Anthropic Claude integrations, frontier LLMs, and MCP ecosystem advances.',
 };
 
 export default function NewsPage() {
@@ -14,67 +14,79 @@ export default function NewsPage() {
     articles = newsData.articles || newsData.data || newsData.items || Object.values(newsData).find(Array.isArray) || [];
   }
 
-  const getTitle = (item) => item?.title || item?.heading || item?.name || item?.headline || 'AI & MCP Article';
-  const getSummary = (item) => item?.summary || item?.description || item?.excerpt || item?.content || item?.details || '';
-  const getImage = (item) => item?.image || item?.imageUrl || item?.thumbnail || item?.img || '/logo.png';
+  const getTitle = (item) => item?.title || item?.heading || item?.name || item?.headline || 'Untitled Article';
+  const getSummary = (item) => item?.summary || item?.description || item?.excerpt || item?.content || '';
+  const getImage = (item) => item?.image || item?.imageUrl || item?.thumbnail || item?.img || null;
   const getSlug = (item, idx) => item?.slug || item?.id || idx;
 
   const formatDate = (rawDate) => {
     if (!rawDate) return 'Sep 16, 2026';
     try {
-      return new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      return new Date(rawDate).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
     } catch (e) {
       return String(rawDate);
     }
   };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 16px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       
-      {/* Page Title Header */}
-      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '32px', fontWeight: '800', color: '#0f172a', marginBottom: '8px' }}>
-          📰 AI News & Model Context Protocol Updates
+      {/* Header Section */}
+      <div className="text-center space-y-2 max-w-2xl mx-auto">
+        <h1 className="text-3xl font-extrabold text-gray-900 flex items-center justify-center gap-2">
+          <span>📰</span> AI News & Model Context Protocol Updates
         </h1>
-        <p style={{ fontSize: '15px', color: '#64748b', maxWidth: '650px', margin: '0 auto' }}>
+        <p className="text-sm text-gray-500 leading-relaxed">
           Daily coverage of breaking AI developments, Anthropic Claude integrations, frontier LLMs, and MCP ecosystem advances.
         </p>
       </div>
 
-      {/* Grid Rendering 21 Live Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+      {/* Grid Displaying All Articles */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.map((article, idx) => {
           const slug = getSlug(article, idx);
+          const title = getTitle(article);
+          const summary = getSummary(article);
+          const img = getImage(article);
           const rawDate = article.date || article.published_at || article.timestamp;
 
           return (
-            <div 
+            <Link 
               key={slug} 
-              style={{ border: '1px solid #e2e8f0', borderRadius: '16px', overflow: 'hidden', backgroundColor: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}
+              href={`/news-article/${slug}`}
+              className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between group cursor-pointer"
             >
               <div>
-                <div style={{ height: '160px', backgroundColor: '#f8fafc', overflow: 'hidden' }}>
-                  <img src={getImage(article)} alt={getTitle(article)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div className="h-48 w-full bg-slate-900 overflow-hidden relative">
+                  {img ? (
+                    <img src={img} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-700 to-indigo-900 text-white font-bold text-lg p-4 text-center">
+                      {title}
+                    </div>
+                  )}
                 </div>
 
-                <div style={{ padding: '20px' }}>
-                  <h2 style={{ fontSize: '17px', fontWeight: 'bold', margin: '0 0 10px 0', lineHeight: '1.4', color: '#0f172a' }}>
-                    <Link href={`/news-article/${slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      {getTitle(article)}
-                    </Link>
+                <div className="p-5">
+                  <h2 className="font-bold text-gray-900 text-base group-hover:text-[#ec4899] transition line-clamp-2 leading-snug mb-2">
+                    {title}
                   </h2>
-                  {getSummary(article) && (
-                    <p style={{ fontSize: '13px', color: '#64748b', lineHeight: '1.5', margin: 0, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                      {getSummary(article)}
+                  {summary && (
+                    <p className="text-xs text-gray-500 line-clamp-3 leading-relaxed">
+                      {summary}
                     </p>
                   )}
                 </div>
               </div>
 
-              <div style={{ padding: '0 20px 20px 20px', fontSize: '12px', color: '#94a3b8', fontWeight: '500' }}>
+              <div className="p-5 pt-0 text-xs text-gray-400 font-medium">
                 🗓️ <time dateTime={rawDate || '2026-09-16'}>{formatDate(rawDate)}</time>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
