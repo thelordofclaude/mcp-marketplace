@@ -1,7 +1,7 @@
 ---
 slug: think-mcp-server
 title: "think-mcp-server MCP Server — Claude & Cursor Integration"
-meta_description: "A minimal MCP Server based on the Anthropic's "think" tool research Install in Claude, Cursor & Claude Code. 25 GitHub stars."
+meta_description: "A minimal MCP Server based on the Anthropic's 'think' tool research Install in Claude, Cursor & Claude Code. 25 GitHub stars."
 keywords: "think-mcp-server, MCP server, Model Context Protocol, Claude integration, search MCP"
 category: search
 type: mcp-server
@@ -27,20 +27,5 @@ think-mcp-server is a production-ready Model Context Protocol (MCP) server with 
 npx -y @smithery/cli install marcopesani/think-mcp-server
 
 # Or manual
-git clone https://github.com/marcopesani/think-mcp-server.git
+git clone [https://github.com/marcopesani/think-mcp-server.git](https://github.com/marcopesani/think-mcp-server.git)
 cd think-mcp-server
-```
-
-## Compatibility
-
-Compatible with: Claude Desktop, Claude Code, Cursor, Windsurf, Cline, and any MCP-compliant client.
-
-## Details
-
-- **Language:** TypeScript
-- **Stars:** ⭐ 25
-- **Forks:** 🍴 5
-- **License:** MIT
-- **Updated:** 2026-09-13
-- **Repo:** [marcopesani/think-mcp-server](https://github.com/marcopesani/think-mcp-server)
-
