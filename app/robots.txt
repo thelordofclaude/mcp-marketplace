@@ -1,4 +1,138 @@
+# Default rule for all web crawlers
 User-agent: *
 Allow: /
 
-Sitemap: https://yourdomain.com/sitemap.xml
+# -----------------------------------------------------------------
+# TRADITIONAL SEARCH ENGINE CRAWLERS (Google, Bing, Yahoo, etc.)
+# -----------------------------------------------------------------
+
+# Google Search & Discover
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-News
+Allow: /
+
+# Microsoft Bing & Copilot
+User-agent: Bingbot
+Allow: /
+
+User-agent: msnbot
+Allow: /
+
+# DuckDuckGo Search
+User-agent: DuckDuckBot
+Allow: /
+
+# Yahoo! Search
+User-agent: Slurp
+Allow: /
+
+# Yandex Search
+User-agent: Yandex
+Allow: /
+
+# Baidu Search
+User-agent: Baiduspider
+Allow: /
+
+# Naver Search (Yeti)
+User-agent: Yeti
+Allow: /
+
+# Brave Search
+User-agent: Bravebot
+Allow: /
+
+# Seznam Search
+User-agent: SeznamBot
+Allow: /
+
+# -----------------------------------------------------------------
+# REAL-TIME AI SEARCH & ANSWER ENGINES (Drives Instant Referrals)
+# -----------------------------------------------------------------
+
+# OpenAI SearchGPT & ChatGPT User Queries
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic Claude Search & Web Retrieval
+User-agent: Claude-Web
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+# Perplexity AI Engine
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-Google
+Allow: /
+
+# Google Gemini & Vertex AI Grounding
+User-agent: Google-Extended
+Allow: /
+
+# Apple Intelligence & Siri Web Answers
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Amazon Alexa / Bedrock Web Crawler
+User-agent: Amazonbot
+Allow: /
+
+# You.com AI Search
+User-agent: YouBot
+Allow: /
+
+# Meta AI Assistant
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+# Cohere AI
+User-agent: cohere-ai
+Allow: /
+
+# DuckDuckGo AI Answers
+User-agent: DuckDuckGo-Favicons-Bot
+Allow: /
+
+# -----------------------------------------------------------------
+# GENERAL LLM TRAINING & DATA INDEXING CRAWLERS
+# -----------------------------------------------------------------
+
+# OpenAI Training Crawler
+User-agent: GPTBot
+Allow: /
+
+# Common Crawl (Powers open-source models)
+User-agent: CCBot
+Allow: /
+
+# Bytespider / ByteDance (TikTok AI Ecosystem)
+User-agent: Bytespider
+Allow: /
+
+# Diffbot (Structured Knowledge Graphs)
+User-agent: Diffbot
+Allow: /
+
+# PetalBot (Huawei AI Search)
+User-agent: PetalBot
+Allow: /
+
+# XML Sitemap Location
+Sitemap: https://www.lordofclaude.com/sitemap.xml
