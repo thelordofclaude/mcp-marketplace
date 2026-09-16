@@ -1,6 +1,6 @@
 ---
 title: "Shipt becomes the latest delivery app with an AI shopping assistant"
-description: "Users can ask the assistant to do things like "Create a cart for my Saturday tailgate for 25 people and include some brunch items," or "Build a cart..."
+description: 'Users can ask the assistant to do things like "Create a cart for my Saturday tailgate for 25 people and include some brunch items," or "Build a cart..."'
 image: "https://image.pollinations.ai/prompt/editorial%20illustration%20modern%20tech%20vector%20flat%20clean%20style%2C%20concept%20art%20about%20Shipt%20becomes%20the%20latest%20delivery%20app%20with%20an%20AI%20shopping%20assistant?width=1200&height=630&nologo=true&seed=44182"
 date: "2026-09-10"
 category: "Frontier Models"
@@ -12,7 +12,7 @@ author_bio: "David holds a PhD in electrical engineering from Caltech and writes
 read_time: "3 min read"
 ---
 
-<p>Users can ask the assistant to do things like "Create a cart for my Saturday tailgate for 25 people and include some brunch items," or "Build a cart for easy school lunches and after-school snacks," Shipt says.</p>
+<p>Users can ask the assistant to do things like "Create a cart for my Saturday tailgate for 25 people and include some brunch items," or "Build a cart for easy school lunches and after-school snacks," Shipt says.</p>
 
 <p>Industry analysts suggest this development could accelerate adoption across enterprise environments.</p>
 
@@ -164,4 +164,3 @@ read_time: "3 min read"
     }).catch(err => console.log('Saved locally'));
   }
 </script>
-
