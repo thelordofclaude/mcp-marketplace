@@ -1,4 +1,4 @@
-import newsData from '@/processed-news.json';
+import newsData from '../../processed-news.json';
 import Link from 'next/link';
 
 export const metadata = {
