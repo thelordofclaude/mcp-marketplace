@@ -1,8 +1,10 @@
+'use client';
+
 import newsData from '../processed-news.json';
 import Link from 'next/link';
 
 export default function HomePage() {
-  // Extract articles array safely
+  // Extract articles array safely regardless of JSON wrapper structure
   let articles = [];
   if (Array.isArray(newsData)) {
     articles = newsData;
@@ -34,7 +36,7 @@ export default function HomePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
       
-      {/* Top Search & Filter Bar */}
+      {/* Search & Filter Header */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="relative w-full md:w-1/2">
           <input 
@@ -49,7 +51,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Featured Pill Tags */}
+      {/* Featured Server Pill Tags */}
       <div className="flex items-center gap-3 overflow-x-auto pb-2 text-xs font-medium text-gray-700">
         <span className="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5 cursor-pointer">
           🔹 Context7 <span className="text-gray-400">MCP Server</span>
@@ -68,10 +70,10 @@ export default function HomePage() {
         </span>
       </div>
 
-      {/* Main Grid: Featured Hero + Top Trending Sidebar */}
+      {/* Hero Section & Top Trending Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        {/* Left: Main Featured Article Tile */}
+        {/* Main Featured Hero Card */}
         <div className="lg:col-span-8 bg-slate-950 text-white rounded-3xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden min-h-[380px]">
           <div className="z-10 max-w-xl">
             <span className="inline-block bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-4">
@@ -108,7 +110,7 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* Right Sidebar: Top Trending */}
+        {/* Sidebar: Top Trending */}
         <div className="lg:col-span-4 bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-gray-900 text-base">Top Trending</h3>
@@ -144,10 +146,10 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Latest News Grid + Newsletter Sidebar */}
+      {/* Latest News Grid & Newsletter Widget */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        {/* News Cards Grid */}
+        {/* News Cards */}
         <div className="lg:col-span-8 space-y-4">
           <div className="flex items-center justify-between border-b border-gray-100 pb-3">
             <h2 className="text-xl font-bold text-gray-900">Latest News</h2>
@@ -197,7 +199,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Newsletter Widget */}
+        {/* Sidebar: Newsletter Signup Form */}
         <div className="lg:col-span-4">
           <div className="bg-cyan-400 text-white rounded-3xl p-6 shadow-sm space-y-4">
             <h3 className="text-xl font-bold">Join the Newsletter</h3>
