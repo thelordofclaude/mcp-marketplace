@@ -1,51 +1,24 @@
-import fs from 'fs';
-import path from 'path';
+'use client';
+
 import Link from 'next/link';
 
-export const revalidate = 60; // Enable incremental static regeneration
-
-function getNewsArticles() {
-  try {
-    const newsDir = path.join(process.cwd(), 'content', 'news');
-    if (!fs.existsSync(newsDir)) return [];
-
-    // Read directory with limit to prevent execution timeouts
-    const fileNames = fs.readdirSync(newsDir).slice(0, 30);
-    
-    const articles = [];
-    for (const fileName of fileNames) {
-      if (!fileName.endsWith('.json') && !fileName.endsWith('.md')) continue;
-
-      const filePath = path.join(newsDir, fileName);
-      const rawContent = fs.readFileSync(filePath, 'utf8');
-      const slug = fileName.replace(/\.(json|md)$/, '');
-
-      try {
-        const parsed = JSON.parse(rawContent);
-        articles.push({
-          slug: parsed.slug || slug,
-          title: parsed.title || parsed.heading || parsed.headline || slug.replace(/-/g, ' '),
-          summary: parsed.summary || parsed.description || parsed.excerpt || '',
-          date: parsed.date || parsed.published_at || parsed.created_at || 'Sep 16, 2026',
-        });
-      } catch (e) {
-        articles.push({
-          slug,
-          title: slug.replace(/-/g, ' '),
-          summary: '',
-          date: 'Sep 16, 2026',
-        });
-      }
-    }
-    return articles;
-  } catch (err) {
-    console.error("Error reading news directory:", err);
-    return [];
-  }
-}
+// Import manifest safely
+import processedNews from '@/content/processed-news.json';
 
 export default function HomePage() {
-  const articles = getNewsArticles();
+  const ids = processedNews?.ids || [];
+  const slugs = processedNews?.slugs || [];
+
+  const articles = slugs.map((slug, idx) => ({
+    id: ids[idx] || idx,
+    slug: slug,
+    title: slug
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase()),
+    date: 'Sep 16, 2026',
+    summary: 'Latest developments and news update in AI and MCP ecosystem.',
+  }));
+
   const featured = articles[0] || {};
   const latestNews = articles.slice(1);
 
@@ -66,24 +39,24 @@ export default function HomePage() {
         </form>
       </div>
 
-      {/* Hero Block */}
+      {/* Featured Hero Block */}
       {featured.title && (
         <div style={{ backgroundColor: '#090d16', borderRadius: '24px', padding: '36px', color: '#ffffff', marginBottom: '40px', position: 'relative', overflow: 'hidden' }}>
           <span style={{ backgroundColor: '#ec4899', color: '#ffffff', fontSize: '11px', fontWeight: '800', padding: '4px 12px', borderRadius: '9999px', textTransform: 'uppercase', display: 'inline-block', marginBottom: '16px' }}>FEATURED</span>
           <h1 style={{ fontSize: '32px', fontWeight: '800', margin: '0 0 12px 0' }}>
-            <Link href={`/news-article/${featured.slug}`} style={{ color: '#ffffff', textDecoration: 'none' }}>
+            <Link href={`/news/${featured.slug}`} style={{ color: '#ffffff', textDecoration: 'none' }}>
               {featured.title}
             </Link>
           </h1>
           <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.6', margin: '0 0 24px 0' }}>{featured.summary}</p>
-          <Link href={`/news-article/${featured.slug}`} style={{ backgroundColor: '#ec4899', color: '#ffffff', padding: '10px 22px', borderRadius: '12px', textDecoration: 'none', fontWeight: '700', fontSize: '14px', display: 'inline-block' }}>Read Story</Link>
+          <Link href={`/news/${featured.slug}`} style={{ backgroundColor: '#ec4899', color: '#ffffff', padding: '10px 22px', borderRadius: '12px', textDecoration: 'none', fontWeight: '700', fontSize: '14px', display: 'inline-block' }}>Read Story</Link>
         </div>
       )}
 
-      {/* Grid of All Real Articles */}
+      {/* Grid of Articles */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
         {latestNews.map((article) => (
-          <Link key={article.slug} href={`/news-article/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link key={article.slug} href={`/news/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <div style={{ border: '1px solid #f1f5f9', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff', padding: '20px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <h3 style={{ fontSize: '15px', fontWeight: '700', margin: '0 0 10px 0', lineHeight: '1.4' }}>{article.title}</h3>
