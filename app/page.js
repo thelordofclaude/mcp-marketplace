@@ -29,7 +29,7 @@ export default function HomePage() {
   const latestNews = articles.slice(1, 5);
 
   return (
-    <div style={{ width: '100%', maxWidth: '100%', padding: '24px 32px', boxSizing: 'border-box', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#0f172a' }}>
+    <div style={{ width: '100%', padding: '24px 32px', boxSizing: 'border-box', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#0f172a' }}>
       
       {/* Improvised Search Bar */}
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
@@ -49,14 +49,13 @@ export default function HomePage() {
               outline: 'none', 
               backgroundColor: '#ffffff',
               boxShadow: '0 4px 12px rgba(15, 23, 42, 0.03)',
-              boxSizing: 'border-box',
-              transition: 'all 0.2s ease'
+              boxSizing: 'border-box'
             }}
           />
         </div>
       </div>
 
-      {/* Improvised Category Tiles Section */}
+      {/* Improvised Category Tiles */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '32px' }}>
         {[
           { icon: '🔹', name: 'Context7', tag: 'MCP Server' },
@@ -78,8 +77,7 @@ export default function HomePage() {
               alignItems: 'center', 
               gap: '6px', 
               cursor: 'pointer',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.02)',
-              transition: 'transform 0.15s ease, background-color 0.15s ease'
+              boxShadow: '0 1px 2px rgba(0,0,0,0.02)'
             }}
           >
             <span style={{ fontSize: '14px' }}>{item.icon}</span> 
@@ -89,7 +87,7 @@ export default function HomePage() {
         ))}
       </div>
 
-      {/* Main Container Layout */}
+      {/* Hero Block & Trending Sidebar */}
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '28px', marginBottom: '40px' }}>
         
         {/* Main Hero Card */}
@@ -158,10 +156,10 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Latest News & Newsletter Section */}
+      {/* Latest News & Restored Cyan Newsletter */}
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '28px' }}>
         
-        {/* News Grid Column */}
+        {/* Latest News Grid */}
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px', marginBottom: '20px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: '800', margin: 0 }}>Latest News</h2>
@@ -197,7 +195,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Newsletter Signup Widget */}
+        {/* Restored Original Newsletter Card */}
         <div>
           <div style={{ backgroundColor: '#00d8f6', borderRadius: '24px', padding: '28px', color: '#042f2e', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
             <h3 style={{ fontSize: '20px', fontWeight: '800', margin: '0 0 10px 0' }}>Join the Newsletter</h3>
@@ -208,9 +206,9 @@ export default function HomePage() {
               <input 
                 type="email" 
                 placeholder="Email Address" 
-                style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: 'none', fontSize: '14px', marginBottom: '12px', outline: 'none', boxSizing: 'border-box' }}
+                style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: 'none', fontSize: '14px', marginBottom: '12px', outline: 'none', boxSizing: 'border-box', backgroundColor: '#ffffff', color: '#0f172a' }}
               />
-              <button type="submit" style={{ width: '100%', backgroundColor: '#00c2de', color: '#042f2e', fontWeight: '800', padding: '12px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              <button type="submit" style={{ width: '100%', backgroundColor: '#00b5ce', color: '#ffffff', fontWeight: '800', padding: '12px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 SUBSCRIBE
               </button>
             </form>
