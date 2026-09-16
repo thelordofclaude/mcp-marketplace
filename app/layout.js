@@ -5,6 +5,7 @@ import AuthModal from '../components/AuthModal'
 import Script from 'next/script'
 
 export const metadata = {
+  metadataBase: new URL('https://www.lordofclaude.com'),
   title: 'LORD OF CLAUDE — AI News, MCP Server & Claude Skill Directory',
   description: 'The ultimate marketplace directory for verified MCP servers, Claude skills, and breaking AI news. Search, submit, and deploy cutting-edge Claude AI integrations.',
   keywords: [
@@ -21,10 +22,13 @@ export const metadata = {
     icon: '/logo.png',
     apple: '/logo.png',
   },
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'LORD OF CLAUDE — AI News, MCP Server & Claude Skill Directory',
     description: 'Discover verified MCP servers, Claude skills, and breaking AI news. The comprehensive marketplace for Claude AI power users.',
-    url: 'https://mcp-marketplace.vercel.app',
+    url: 'https://www.lordofclaude.com',
     siteName: 'LORD OF CLAUDE',
     images: [
       {
