@@ -24,6 +24,13 @@ export default function NewsArticlePage({ params }) {
   const article = getContentItem('news', slug)
   if (!article) return notFound()
 
+  // Safely format published_at to avoid [object Date] error
+  const formattedDate = article.published_at
+    ? article.published_at instanceof Date
+      ? article.published_at.toISOString().split('T')[0]
+      : String(article.published_at)
+    : 'Recently'
+
   // Fetch all articles for sidebar and related content
   const rawSlugs = getAllSlugs('news') || []
   const allArticles = rawSlugs
@@ -65,7 +72,7 @@ export default function NewsArticlePage({ params }) {
           </h1>
 
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center', fontSize: '13px', color: '#6b7280', marginBottom: '24px' }}>
-            <span>📅 {article.published_at || 'Recently'}</span>
+            <span>📅 {formattedDate}</span>
             <span style={{ background: '#f3e8ff', color: '#9333ea', padding: '2px 10px', borderRadius: '12px', fontWeight: '600' }}>
               {article.category || 'AI & Technology'}
             </span>
