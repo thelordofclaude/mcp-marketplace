@@ -1,13 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-);
+import newsArticles from '../../processed-news.json';
+import mcpServers from '../../processed-mcp.json';
+import claudeSkills from '../../processed-skills.json';
 
 export async function GET() {
   const baseUrl = 'https://www.lordofclaude.com';
 
+  // 1. Core Static Pages
   const staticPages = [
     '',
     '/mcp-servers',
@@ -34,46 +32,46 @@ export async function GET() {
     priority: route === '' ? '1.0' : '0.8',
   }));
 
-  let dynamicPages = [];
+  // 2. Dynamic Pages from Local JSON Archives
+  const dynamicPages = [];
 
-  try {
-    const [{ data: skills }, { data: mcpServers }, { data: newsArticles }] = await Promise.all([
-      supabase.from('claude_skills').select('slug, updated_at'),
-      supabase.from('mcp_servers').select('slug, updated_at'),
-      supabase.from('news_articles').select('slug, updated_at'),
-    ]);
-
-    if (skills) {
-      skills.forEach((item) => {
+  if (Array.isArray(claudeSkills)) {
+    claudeSkills.forEach((item) => {
+      const slug = item.slug || item.id;
+      if (slug) {
         dynamicPages.push({
-          url: `${baseUrl}/claude-skill/${item.slug}`,
-          lastMod: item.updated_at ? new Date(item.updated_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          url: `${baseUrl}/claude-skill/${slug}`,
+          lastMod: new Date().toISOString().split('T')[0],
           priority: '0.7',
         });
-      });
-    }
+      }
+    });
+  }
 
-    if (mcpServers) {
-      mcpServers.forEach((item) => {
+  if (Array.isArray(mcpServers)) {
+    mcpServers.forEach((item) => {
+      const slug = item.slug || item.id;
+      if (slug) {
         dynamicPages.push({
-          url: `${baseUrl}/mcp-server/${item.slug}`,
-          lastMod: item.updated_at ? new Date(item.updated_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          url: `${baseUrl}/mcp-server/${slug}`,
+          lastMod: new Date().toISOString().split('T')[0],
           priority: '0.7',
         });
-      });
-    }
+      }
+    });
+  }
 
-    if (newsArticles) {
-      newsArticles.forEach((item) => {
+  if (Array.isArray(newsArticles)) {
+    newsArticles.forEach((item) => {
+      const slug = item.slug || item.id;
+      if (slug) {
         dynamicPages.push({
-          url: `${baseUrl}/news-article/${item.slug}`,
-          lastMod: item.updated_at ? new Date(item.updated_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          url: `${baseUrl}/news-article/${slug}`,
+          lastMod: new Date().toISOString().split('T')[0],
           priority: '0.6',
         });
-      });
-    }
-  } catch (error) {
-    console.error('Error fetching dynamic sitemap routes:', error);
+      }
+    });
   }
 
   const allPages = [...staticPages, ...dynamicPages];
