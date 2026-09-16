@@ -31,31 +31,81 @@ export default function HomePage() {
   return (
     <div style={{ width: '100%', padding: '24px 32px', boxSizing: 'border-box', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#0f172a' }}>
       
-      {/* Improvised Search Bar */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-        <div style={{ position: 'relative', width: '100%', maxWidth: '640px' }}>
-          <span style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', fontSize: '15px', color: '#94a3b8' }}>
+      {/* Modern Enhanced Search Bar UI */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px', width: '100%' }}>
+        <form 
+          onSubmit={(e) => e.preventDefault()}
+          style={{ 
+            position: 'relative', 
+            width: '100%', 
+            maxWidth: '720px',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          {/* Search Icon */}
+          <span style={{ position: 'absolute', left: '18px', fontSize: '16px', color: '#94a3b8', pointerEvents: 'none' }}>
             🔍
           </span>
+
+          {/* Search Input */}
           <input 
             type="text" 
-            placeholder="Search Claude skills, MCP servers, plugins, tools, and more..." 
+            placeholder="Search Claude skills, MCP servers, plugins, tools..." 
             style={{ 
               width: '100%', 
-              padding: '12px 20px 12px 48px', 
+              padding: '14px 130px 14px 48px', 
               borderRadius: '9999px', 
-              border: '1.5px solid #e2e8f0', 
+              border: '2px solid #e2e8f0', 
               fontSize: '14px', 
               outline: 'none', 
               backgroundColor: '#ffffff',
-              boxShadow: '0 4px 12px rgba(15, 23, 42, 0.03)',
-              boxSizing: 'border-box'
+              boxShadow: '0 8px 24px rgba(15, 23, 42, 0.04)',
+              boxSizing: 'border-box',
+              color: '#0f172a',
+              transition: 'all 0.2s ease-in-out'
             }}
           />
-        </div>
+
+          {/* Keyboard Shortcut Badge */}
+          <span style={{
+            position: 'absolute',
+            right: '100px',
+            backgroundColor: '#f1f5f9',
+            border: '1px solid #cbd5e1',
+            color: '#64748b',
+            borderRadius: '6px',
+            padding: '2px 7px',
+            fontSize: '11px',
+            fontWeight: '700',
+            pointerEvents: 'none'
+          }}>
+            ⌘K
+          </span>
+
+          {/* Action Search Button */}
+          <button
+            type="submit"
+            style={{
+              position: 'absolute',
+              right: '6px',
+              backgroundColor: '#ec4899',
+              color: '#ffffff',
+              border: 'none',
+              padding: '9px 18px',
+              borderRadius: '9999px',
+              fontSize: '13px',
+              fontWeight: '700',
+              cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(236, 72, 153, 0.3)'
+            }}
+          >
+            Search
+          </button>
+        </form>
       </div>
 
-      {/* Improvised Category Tiles */}
+      {/* Category Tiles */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '32px' }}>
         {[
           { icon: '🔹', name: 'Context7', tag: 'MCP Server' },
@@ -156,7 +206,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Latest News & Restored Cyan Newsletter */}
+      {/* Latest News & Cyan Newsletter */}
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '28px' }}>
         
         {/* Latest News Grid */}
@@ -195,7 +245,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Restored Original Newsletter Card */}
+        {/* Newsletter Card */}
         <div>
           <div style={{ backgroundColor: '#00d8f6', borderRadius: '24px', padding: '28px', color: '#042f2e', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
             <h3 style={{ fontSize: '20px', fontWeight: '800', margin: '0 0 10px 0' }}>Join the Newsletter</h3>
