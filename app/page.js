@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import processedNews from '../processed-news.json';
 import { getContentItem } from '../lib/content';
@@ -7,7 +5,7 @@ import { getContentItem } from '../lib/content';
 export default function HomePage() {
   const slugs = processedNews?.slugs || [];
 
-  // Hydrate full content items for real dates, images, and descriptions
+  // Hydrate full content items for real dates, images, and descriptions on the server
   const articles = slugs
     .map((slug) => getContentItem('news', slug))
     .filter(Boolean);
@@ -21,7 +19,7 @@ export default function HomePage() {
       
       {/* Search Bar */}
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px', width: '100%' }}>
-        <form onSubmit={(e) => e.preventDefault()} style={{ position: 'relative', width: '100%', maxWidth: '720px', display: 'flex', alignItems: 'center' }}>
+        <form style={{ position: 'relative', width: '100%', maxWidth: '720px', display: 'flex', alignItems: 'center' }}>
           <span style={{ position: 'absolute', left: '18px', fontSize: '16px', color: '#94a3b8', pointerEvents: 'none' }}>🔍</span>
           <input 
             type="text" 
@@ -61,12 +59,6 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
-        <style jsx>{`
-          @keyframes marquee {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
-          }
-        `}</style>
       </div>
 
       {/* Grid Section Title */}
