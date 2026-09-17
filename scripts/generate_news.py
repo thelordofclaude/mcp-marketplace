@@ -5,174 +5,170 @@ import random
 import urllib.parse
 from datetime import datetime
 
-# Optional: Load environment variables if using OpenAI/Claude for text generation
-try:
-    import requests
-except ImportError:
-    raise ImportError("Please install 'requests' using: pip install requests")
-
 # ==========================================
 # CONFIGURATION & CONSTANTS
 # ==========================================
-OUTPUT_DIR = os.path.join(os.getcwd(), "content", "news")
-IMAGE_MODEL = "flux"  # Models available: flux, turbo, etc.
+CONTENT_DIR = os.path.join(os.getcwd(), "content")
+PROCESSED_NEWS_FILE = os.path.join(os.getcwd(), "processed-news.json")
+IMAGE_MODEL = "flux"
 IMAGE_WIDTH = 1200
 IMAGE_HEIGHT = 630
 
-# ==========================================
-# 1. 3D COMIC MAGAZINE IMAGE URL GENERATOR
-# ==========================================
-def generate_3d_comic_image_url(article_title: str, context: str = "") -> str:
+def get_daily_article_limit() -> int:
     """
-    Generates a Pollinations.ai image URL with explicit 3D comic magazine styling instructions.
-    Prevents robotic/flat imagery by injecting artistic attributes and utilizing flux/enhance parameters.
+    Returns 2 articles/day for current month (September 2026), 
+    and automatically scales to 3 articles/day next month (October 2026) onwards.
     """
-    # Clean up title for the prompt
-    clean_title = re.sub(r'[^a-zA-Z0-9\s]', '', article_title)
-    
-    # Enforce 3D Comic Magazine style aesthetics
-    style_prompt = (
-        f"3D comic book style illustration, vibrant comic magazine cover art, "
-        f"detailed 3D render, vivid bold neon colors, dramatic lighting, pop art comic aesthetic, "
-        f"expressive characters, highly detailed studio lighting, action comic frame based on: {clean_title}"
-    )
-    
-    if context:
-        style_prompt += f", {context}"
-
-    # URL encode prompt
-    encoded_prompt = urllib.parse.quote(style_prompt)
-    seed = random.randint(1000, 99999)
-
-    # Pollinations API with flux model, custom dimensions, seed, and enhancement flags
-    image_url = (
-        f"https://image.pollinations.ai/prompt/{encoded_prompt}"
-        f"?width={IMAGE_WIDTH}"
-        f"&height={IMAGE_HEIGHT}"
-        f"&model={IMAGE_MODEL}"
-        f"&seed={seed}"
-        f"&nologo=true"
-        f"&enhance=true"
-    )
-    
-    return image_url
+    now = datetime.now()
+    # September is month 9; if month > 9 or year > 2026, scale up
+    if now.year > 2026 or now.month > 9:
+        return 3
+    return 2
 
 # ==========================================
-# 2. SLUG & METADATA HELPERS
+# 1. HELPER FUNCTIONS
 # ==========================================
+def clean_title(title: str) -> str:
+    """Removes trailing index numbers (e.g., ' 0' or '-0') and cleans casing."""
+    title = re.sub(r'[\s-]+\d+$', '', title)
+    return title.strip()
+
 def create_slug(title: str) -> str:
     """Converts article title into a clean URL-friendly slug."""
-    slug = title.lower()
-    slug = re.sub(r'[^a-z0-9\s-]', '', slug)
+    clean = clean_title(title).lower()
+    slug = re.sub(r'[^a-z0-9\s-]', '', clean)
     slug = re.sub(r'[\s_]+', '-', slug)
     return slug.strip('-')
 
+def generate_3d_comic_image_url(article_title: str, context: str = "") -> str:
+    """Generates Pollinations.ai image URL with 3D comic magazine style parameters."""
+    clean = re.sub(r'[^a-zA-Z0-9\s]', '', clean_title(article_title))
+    style_prompt = (
+        f"3D comic book style illustration, vibrant comic magazine cover art, "
+        f"detailed 3D render, vivid bold neon colors, dramatic lighting, pop art comic aesthetic, "
+        f"expressive characters, highly detailed studio lighting based on: {clean}"
+    )
+    if context:
+        style_prompt += f", {context}"
+
+    encoded_prompt = urllib.parse.quote(style_prompt)
+    seed = random.randint(1000, 99999)
+
+    return (
+        f"https://image.pollinations.ai/prompt/{encoded_prompt}"
+        f"?width={IMAGE_WIDTH}&height={IMAGE_HEIGHT}"
+        f"&model={IMAGE_MODEL}&seed={seed}&nologo=true&enhance=true"
+    )
+
 # ==========================================
-# 3. ARTICLE GENERATOR FUNCTION
+# 2. MARKDOWN ARTICLE GENERATOR
 # ==========================================
-def generate_article_data(topic: str):
-    """
-    Constructs a complete news article object with title, slug, content, 
-    comments, author info, and a 3D comic styled image URL.
-    """
-    title = f"{topic}: Next-Gen Breakthrough Transmutes Enterprise AI Workloads"
+def generate_markdown_article(topic: str):
+    raw_title = f"{topic}: Next-Gen Breakthrough Transmutes Enterprise AI Workloads"
+    title = clean_title(raw_title)
     slug = create_slug(title)
     publish_date = datetime.now().strftime("%B %d, %Y")
-
-    # Generate the high-quality 3D comic image URL
+    
     image_url = generate_3d_comic_image_url(
         article_title=title, 
         context="futuristic tech server, floating glowing holographic data, 3D graphic novel style"
     )
 
-    # Article Body Paragraphs
+    description = f"Explore how recent developments in {topic} are revolutionizing real-time inference, cost efficiency, and enterprise model deployment."
+
+    # Body Paragraphs
     p1 = (
         f"SAN FRANCISCO — In a landmark development for the artificial intelligence ecosystem, "
         f"recent announcements surrounding {topic} have signaled a monumental shift in enterprise adoption. "
         f"As demand for real-time inference and scalable serverless compute reaches unprecedented heights, "
         f"developers are rapidly moving away from legacy infrastructure in favor of AI-native platforms."
     )
-    
     p2 = (
         f"Industry analysts note that traditional cloud setups struggle with dynamic scaling requirements "
         f"imposed by modern frontier models. Architectures centered around {topic} offer significant reductions "
         f"in latency while drastically cutting operational overhead for engineering teams worldwide."
     )
-    
     p3 = (
         f"As competition intensifies among infrastructure providers, early benchmarks show performance "
         f"gains exceeding 40% in deployment speed. Decision-makers are prioritizing governance, security, "
         f"and seamless developer experience as key evaluation metrics moving into the next quarter."
     )
 
-    full_content = f"{p1}\n\n{p2}\n\n{p3}"
+    # Frontmatter + Markdown Body
+    md_content = f"""---
+title: "{title}"
+date: "{publish_date}"
+description: "{description}"
+category: "Frontier Models"
+image: "{image_url}"
+author: "Jamie O'Brien"
+author_title: "Silicon Valley Bureau Chief"
+author_avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop&q=80"
+---
 
-    # Sample Community Comments
-    comments = [
-        {
-            "author": "Alex Rivera",
-            "handle": "@alexrivera_ai",
-            "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80",
-            "text": "Great analysis. The integration complexity seems lower than expected, which could accelerate enterprise adoption.",
-            "claps": 42
-        },
-        {
-            "author": "Michael Chang",
-            "handle": "@mchang_gpu",
-            "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80",
-            "text": "The cost-to-performance ratio here looks extremely promising for early-stage startups.",
-            "claps": 116
-        }
-    ]
+{p1}
 
-    # Author Metadata
-    author = {
-        "name": "Jamie O'Brien",
-        "role": "Silicon Valley Bureau Chief",
-        "email": "jamie@lordofclaude.com",
-        "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop&q=80",
-        "bio": "Jamie has been reporting on enterprise software and AI infrastructure since 2012."
-    }
+{p2}
 
-    # Assembled Article JSON Structure
-    article_data = {
-        "title": title,
-        "slug": slug,
-        "published_at": publish_date,
-        "category": "Frontier Models",
-        "image": image_url,
-        "content": full_content,
-        "author": author,
-        "comments": comments
-    }
-
-    return article_data
+{p3}
+"""
+    return {"slug": slug, "title": title, "content": md_content}
 
 # ==========================================
-# 4. SAVE & RUN SCRIPT
+# 3. SAVE & REGISTRY SYNC
 # ==========================================
-def save_article(article_data: dict):
-    """Saves the generated article to the local file system as JSON."""
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    file_path = os.path.join(OUTPUT_DIR, f"{article_data['slug']}.json")
+def save_and_update_registry(articles):
+    os.makedirs(CONTENT_DIR, exist_ok=True)
+    
+    # Read existing processed news registry
+    processed_data = {"slugs": []}
+    if os.path.exists(PROCESSED_NEWS_FILE):
+        try:
+            with open(PROCESSED_NEWS_FILE, "r", encoding="utf-8") as f:
+                processed_data = json.load(f)
+        except Exception:
+            processed_data = {"slugs": []}
 
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(article_data, f, indent=2, ensure_ascii=False)
+    new_slugs = []
 
-    print(f" Successfully generated article: {article_data['title']}")
-    print(f" File saved at: {file_path}")
-    print(f" 3D Comic Image URL: {article_data['image']}\n")
+    for item in articles:
+        slug = item["slug"]
+        # Save markdown file to /content/[slug].md
+        md_file_path = os.path.join(CONTENT_DIR, f"{slug}.md")
+        with open(md_file_path, "w", encoding="utf-8") as f:
+            f.write(item["content"])
+        
+        print(f"✅ Saved Markdown: {md_file_path}")
+        new_slugs.append(slug)
+
+    # Prepend new slugs to the top of the processed list (ensures freshest articles show first)
+    existing_slugs = [s for s in processed_data.get("slugs", []) if s not in new_slugs]
+    updated_slugs = new_slugs + existing_slugs
+
+    with open(PROCESSED_NEWS_FILE, "w", encoding="utf-8") as f:
+        json.dump({"slugs": updated_slugs}, f, indent=2)
+
+    print(f"🔄 Updated {PROCESSED_NEWS_FILE} with new article order.\n")
 
 if __name__ == "__main__":
-    # Sample execution topic
-    topics = [
-        "Railway Cloud Infrastructure",
+    daily_limit = get_daily_article_limit()
+    print(f"🚀 Starting News Generator... (Daily Cap: {daily_limit} articles/day)\n")
+
+    # Sample queue of potential topics
+    topic_queue = [
         "Claude 3.7 Sonnet Developer Ecosystem",
-        "MCP Server Protocols"
+        "MCP Server Protocols",
+        "Railway Cloud Infrastructure",
+        "OpenAI Search & Browser Integration"
     ]
-    
-    print("🚀 Starting News Generator with 3D Comic Magazine Image Engine...\n")
-    for topic in topics:
-        article = generate_article_data(topic)
-        save_article(article)
-    print("✨ Generation complete!")
+
+    # Select only up to the daily allowed limit
+    selected_topics = topic_queue[:daily_limit]
+    generated_articles = []
+
+    for topic in selected_topics:
+        article = generate_markdown_article(topic)
+        generated_articles.append(article)
+
+    save_and_update_registry(generated_articles)
+    print("✨ News generation complete!")
