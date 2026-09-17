@@ -1,34 +1,7 @@
 {
-  "ids": [
-    875022659919,
-    569078312582,
-    319005414690,
-    882302638841,
-    542585772191,
-    622753691011,
-    429402624662,
-    555234085429,
-    749111215309,
-    981970600056,
-    915957413815,
-    596648312160,
-    992314917147,
-    505797263816,
-    171841219835,
-    907969014802,
-    148600269273,
-    958638699117,
-    5334243612679849590,
-    587149017420556533,
-    7245293323595031314,
-    6209857275733960376,
-    6495295479127860739,
-    8008672437870510994,
-    2885637898384380588,
-    3863667830211174265,
-    8849648274999136920
-  ],
   "slugs": [
+    "claude-37-sonnet-developer-ecosystem-next-gen-breakthrough-transmutes-enterprise-ai-workloads",
+    "mcp-server-protocols-next-gen-breakthrough-transmutes-enterprise-ai-workloads",
     "ai-update-what-will-apple-s-john-ternus-era-look-like-0",
     "another-swarm-of-openai-agents-reached-the-open-internet-wit-0",
     "apple-s-ternus-era-begins-as-nvidia-bets-on-the-whole-ai-sta-0",
@@ -56,9 +29,5 @@
     "behind-the-scenes-google-cloud-opens-singapore-engineering-c-2",
     "analysis-railway-secures-100-million-to-challenge-aws-with-a-0",
     "market-breakthrough-openai-buys-glass-imaging-for-300m-in-bo-1"
-  ],
-  "last_run": "2026-09-15T18:08:27.558355",
-  "total": 18,
-  "today_count": 5,
-  "today_date": "2026-09-15"
+  ]
 }
