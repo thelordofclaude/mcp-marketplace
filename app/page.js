@@ -2,17 +2,32 @@ import Link from 'next/link';
 import processedNews from '../processed-news.json';
 import { getContentItem } from '../lib/content';
 
+function cleanTitle(rawTitle) {
+  if (!rawTitle) return '';
+  return rawTitle
+    .replace(/-\d+$/, '')
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 export default function HomePage() {
   const slugs = processedNews?.slugs || [];
 
-  // Hydrate full content items for real dates, images, and descriptions on the server
+  // Limit total fetched articles to top 100 and clean up titles/dates
   const articles = slugs
-    .map((slug) => getContentItem('news', slug))
+    .slice(0, 100)
+    .map((slug) => {
+      const item = getContentItem('news', slug);
+      if (!item) return null;
+      return {
+        ...item,
+        title: cleanTitle(item.title),
+      };
+    })
     .filter(Boolean);
 
   const featured = articles[0] || {};
-  const latestNews = articles.slice(1);
-  const tickerItems = articles.slice(0, 5); // Ticker tile dataset
+  const latestNews = articles.slice(1, 100);
+  const tickerItems = articles.slice(0, 5);
 
   return (
     <div style={{ width: '100%', padding: '24px 32px', boxSizing: 'border-box', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#0f172a' }}>
@@ -45,7 +60,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Continuously Moving News Strip Ticker */}
+      {/* Ticker Strip */}
       <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', marginBottom: '40px', background: '#f8fafc', padding: '12px 0', border: '1px solid #e2e8f0', borderRadius: '16px' }}>
         <div style={{ display: 'inline-flex', gap: '16px', animation: 'marquee 25s linear infinite' }}>
           {[...tickerItems, ...tickerItems].map((item, i) => (
@@ -61,10 +76,10 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Grid Section Title */}
+      {/* Grid Header */}
       <div style={{ marginBottom: '20px' }}>
         <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#0f172a' }}>AI News & Protocol Updates</h2>
-        <p style={{ fontSize: '14px', color: '#64748b', margin: '4px 0 0 0' }}>All breaking news articles generated on the platform.</p>
+        <p style={{ fontSize: '14px', color: '#64748b', margin: '4px 0 0 0' }}>Top 100 breaking stories and developments.</p>
       </div>
 
       {/* Grid of Articles */}
@@ -82,7 +97,7 @@ export default function HomePage() {
                 </p>
               </div>
               <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '16px' }}>
-                🗓️ {article.date || article.published_at || 'Sep 2026'}
+                🗓️ {article.date || 'Sep 2026'}
               </div>
             </div>
           </Link>
