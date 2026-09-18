@@ -8,7 +8,8 @@ from datetime import datetime
 # ==========================================
 # CONFIGURATION & CONSTANTS
 # ==========================================
-CONTENT_DIR = os.path.join(os.getcwd(), "content")
+# Point directly to content/news directory to match your Next.js routing
+CONTENT_DIR = os.path.join(os.getcwd(), "content", "news")
 PROCESSED_NEWS_FILE = os.path.join(os.getcwd(), "processed-news.json")
 IMAGE_MODEL = "flux"
 IMAGE_WIDTH = 1200
@@ -20,7 +21,6 @@ def get_daily_article_limit() -> int:
     and automatically scales to 3 articles/day next month (October 2026) onwards.
     """
     now = datetime.now()
-    # September is month 9; if month > 9 or year > 2026, scale up
     if now.year > 2026 or now.month > 9:
         return 3
     return 2
@@ -67,7 +67,8 @@ def generate_markdown_article(topic: str):
     raw_title = f"{topic}: Next-Gen Breakthrough Transmutes Enterprise AI Workloads"
     title = clean_title(raw_title)
     slug = create_slug(title)
-    publish_date = datetime.now().strftime("%B %d, %Y")
+    # Formatted for standard JS parsing
+    publish_date = datetime.now().strftime("%Y-%m-%d")
     
     image_url = generate_3d_comic_image_url(
         article_title=title, 
@@ -129,11 +130,17 @@ def save_and_update_registry(articles):
         except Exception:
             processed_data = {"slugs": []}
 
+    existing_slugs = processed_data.get("slugs", [])
     new_slugs = []
 
     for item in articles:
         slug = item["slug"]
-        # Save markdown file to /content/[slug].md
+        
+        # Avoid duplicate overwrites
+        if slug in existing_slugs:
+            continue
+
+        # Save markdown file to /content/news/[slug].md
         md_file_path = os.path.join(CONTENT_DIR, f"{slug}.md")
         with open(md_file_path, "w", encoding="utf-8") as f:
             f.write(item["content"])
@@ -141,28 +148,29 @@ def save_and_update_registry(articles):
         print(f"✅ Saved Markdown: {md_file_path}")
         new_slugs.append(slug)
 
-    # Prepend new slugs to the top of the processed list (ensures freshest articles show first)
-    existing_slugs = [s for s in processed_data.get("slugs", []) if s not in new_slugs]
-    updated_slugs = new_slugs + existing_slugs
+    # Append new slugs to the end of the registry array
+    # (Next.js pages call .reverse() to render newest articles first)
+    updated_slugs = existing_slugs + new_slugs
 
     with open(PROCESSED_NEWS_FILE, "w", encoding="utf-8") as f:
         json.dump({"slugs": updated_slugs}, f, indent=2)
 
-    print(f"🔄 Updated {PROCESSED_NEWS_FILE} with new article order.\n")
+    print(f"🔄 Updated {PROCESSED_NEWS_FILE} with {len(new_slugs)} new entries.\n")
 
 if __name__ == "__main__":
     daily_limit = get_daily_article_limit()
     print(f"🚀 Starting News Generator... (Daily Cap: {daily_limit} articles/day)\n")
 
-    # Sample queue of potential topics
+    # Dynamic topic rotation timestamped to generate fresh daily articles
+    timestamp = datetime.now().strftime("%Y%m%d%H%M")
     topic_queue = [
-        "Claude 3.7 Sonnet Developer Ecosystem",
-        "MCP Server Protocols",
-        "Railway Cloud Infrastructure",
-        "OpenAI Search & Browser Integration"
+        f"Claude 3.7 Sonnet Developer Ecosystem {timestamp}",
+        f"MCP Server Protocols {timestamp}",
+        f"Railway Cloud Infrastructure {timestamp}",
+        f"OpenAI Search & Browser Integration {timestamp}"
     ]
 
-    # Select only up to the daily allowed limit
+    # Select up to daily limit
     selected_topics = topic_queue[:daily_limit]
     generated_articles = []
 
