@@ -2,18 +2,18 @@ import Link from 'next/link';
 import processedNews from '../../processed-news.json';
 import { getContentItem } from '../../lib/content';
 
-// Helper to format title and remove trailing index numbers (e.g., "...Look Like 0")
 function cleanTitle(rawTitle) {
   if (!rawTitle) return '';
   return rawTitle
-    .replace(/-\d+$/, '') // Remove trailing index IDs
-    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize words
+    .replace(/-\d+$/, '')
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 export default function NewsIndexPage() {
-  const slugs = processedNews?.slugs || [];
+  // Reversing slugs puts the latest articles (Sept 15, 16, 17...) at the top
+  const rawSlugs = processedNews?.slugs || [];
+  const slugs = [...rawSlugs].reverse();
 
-  // Hydrate full articles and limit output to top 100
   const articles = slugs
     .slice(0, 100)
     .map((slug) => {
@@ -30,7 +30,7 @@ export default function NewsIndexPage() {
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 24px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       
-      {/* SEO Optimized Header Section */}
+      {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '40px' }}>
         <h1 style={{ fontSize: '36px', fontWeight: '800', color: '#0f172a', marginBottom: '12px' }}>
           📰 AI News & Model Context Protocol (MCP) Updates
@@ -40,11 +40,11 @@ export default function NewsIndexPage() {
         </p>
       </div>
 
-      {/* Grid of Cleaned Article Tiles */}
+      {/* Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
         {articles.map((article) => (
           <Link key={article.slug} href={`/news-article/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div style={{ border: '1px solid #e2e8f0', borderRadius: '16px', padding: '24px', backgroundColor: '#ffffff', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.03)', transition: 'transform 0.2s ease' }}>
+            <div style={{ border: '1px solid #e2e8f0', borderRadius: '16px', padding: '24px', backgroundColor: '#ffffff', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.03)' }}>
               <div>
                 {article.image && (
                   <img src={article.image} alt={article.title} style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '10px', marginBottom: '16px' }} />
