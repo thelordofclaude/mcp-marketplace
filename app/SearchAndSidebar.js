@@ -119,7 +119,7 @@ export default function SearchAndSidebar({ articles, featured, latestNews, trend
                     </p>
                   </div>
                   <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '16px' }}>
-                    🗓️ {article.date || article.published_at || 'Sep 2026'}
+                    🗓️ {typeof article.date === 'string' ? article.date : String(article.date || 'Sep 2026')}
                   </div>
                 </div>
               </Link>
