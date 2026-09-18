@@ -6,9 +6,9 @@ import urllib.parse
 from datetime import datetime
 
 # ==========================================
-# CONFIGURATION & CONSTANTS
+# CONFIGURATION & PATHS
 # ==========================================
-# Point directly to content/news directory to match your Next.js routing
+# Saves directly to content/news to match Next.js dynamic routing
 CONTENT_DIR = os.path.join(os.getcwd(), "content", "news")
 PROCESSED_NEWS_FILE = os.path.join(os.getcwd(), "processed-news.json")
 IMAGE_MODEL = "flux"
@@ -17,8 +17,8 @@ IMAGE_HEIGHT = 630
 
 def get_daily_article_limit() -> int:
     """
-    Returns 2 articles/day for current month (September 2026), 
-    and automatically scales to 3 articles/day next month (October 2026) onwards.
+    Returns 2 articles/day for September 2026, 
+    and automatically scales to 3 articles/day from October 2026 onwards.
     """
     now = datetime.now()
     if now.year > 2026 or now.month > 9:
@@ -67,7 +67,6 @@ def generate_markdown_article(topic: str):
     raw_title = f"{topic}: Next-Gen Breakthrough Transmutes Enterprise AI Workloads"
     title = clean_title(raw_title)
     slug = create_slug(title)
-    # Formatted for standard JS parsing
     publish_date = datetime.now().strftime("%Y-%m-%d")
     
     image_url = generate_3d_comic_image_url(
@@ -77,7 +76,7 @@ def generate_markdown_article(topic: str):
 
     description = f"Explore how recent developments in {topic} are revolutionizing real-time inference, cost efficiency, and enterprise model deployment."
 
-    # Body Paragraphs
+    # Article Body Paragraphs
     p1 = (
         f"SAN FRANCISCO — In a landmark development for the artificial intelligence ecosystem, "
         f"recent announcements surrounding {topic} have signaled a monumental shift in enterprise adoption. "
@@ -95,16 +94,19 @@ def generate_markdown_article(topic: str):
         f"and seamless developer experience as key evaluation metrics moving into the next quarter."
     )
 
-    # Frontmatter + Markdown Body
+    # Markdown Frontmatter with full Dark Theme Author metadata
     md_content = f"""---
 title: "{title}"
 date: "{publish_date}"
+published_at: "{publish_date}"
 description: "{description}"
 category: "Frontier Models"
 image: "{image_url}"
 author: "Jamie O'Brien"
 author_title: "Silicon Valley Bureau Chief"
-author_avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop&q=80"
+author_email: "jamie@lordofclaude.com"
+author_bio: "Jamie has been reporting from Palo Alto since 2012. He previously covered enterprise software at Bloomberg and holds deep source relationships across major AI labs."
+author_avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&auto=format&fit=crop&q=80"
 ---
 
 {p1}
@@ -136,7 +138,7 @@ def save_and_update_registry(articles):
     for item in articles:
         slug = item["slug"]
         
-        # Avoid duplicate overwrites
+        # Prevent duplicate overwrites
         if slug in existing_slugs:
             continue
 
@@ -148,8 +150,7 @@ def save_and_update_registry(articles):
         print(f"✅ Saved Markdown: {md_file_path}")
         new_slugs.append(slug)
 
-    # Append new slugs to the end of the registry array
-    # (Next.js pages call .reverse() to render newest articles first)
+    # Append new slugs to end of registry (Next.js pages reverse array to render newest first)
     updated_slugs = existing_slugs + new_slugs
 
     with open(PROCESSED_NEWS_FILE, "w", encoding="utf-8") as f:
@@ -161,7 +162,7 @@ if __name__ == "__main__":
     daily_limit = get_daily_article_limit()
     print(f"🚀 Starting News Generator... (Daily Cap: {daily_limit} articles/day)\n")
 
-    # Dynamic topic rotation timestamped to generate fresh daily articles
+    # Timestamp ensures fresh unique topics for every automated execution
     timestamp = datetime.now().strftime("%Y%m%d%H%M")
     topic_queue = [
         f"Claude 3.7 Sonnet Developer Ecosystem {timestamp}",
