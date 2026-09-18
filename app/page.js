@@ -11,6 +11,18 @@ function cleanTitle(rawTitle) {
     .trim();
 }
 
+// Safely format dates to string
+function formatDate(dateVal) {
+  if (!dateVal) return 'Sep 2026';
+  if (dateVal instanceof Date) {
+    return dateVal.toISOString().split('T')[0];
+  }
+  if (typeof dateVal === 'object') {
+    return String(dateVal);
+  }
+  return String(dateVal);
+}
+
 const TRENDING_MCP_SERVERS = [
   { name: 'PostgreSQL MCP', category: 'Database', slug: 'postgresql-mcp' },
   { name: 'Brave Search MCP', category: 'Search & Web', slug: 'brave-search-mcp' },
@@ -41,6 +53,7 @@ export default function HomePage() {
         type: 'News Article',
         link: `/news-article/${slug}`,
         title: cleanTitle(item.title),
+        date: formatDate(item.date || item.published_at),
       };
     })
     .filter(Boolean);
