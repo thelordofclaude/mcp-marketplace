@@ -10,9 +10,10 @@ function cleanTitle(rawTitle) {
 }
 
 export default function HomePage() {
-  const slugs = processedNews?.slugs || [];
+  // Reversing slugs puts the newest articles first
+  const rawSlugs = processedNews?.slugs || [];
+  const slugs = [...rawSlugs].reverse();
 
-  // Limit total fetched articles to top 100 and clean up titles/dates
   const articles = slugs
     .slice(0, 100)
     .map((slug) => {
@@ -32,23 +33,9 @@ export default function HomePage() {
   return (
     <div style={{ width: '100%', padding: '24px 32px', boxSizing: 'border-box', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#0f172a' }}>
       
-      {/* Search Bar */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px', width: '100%' }}>
-        <form style={{ position: 'relative', width: '100%', maxWidth: '720px', display: 'flex', alignItems: 'center' }}>
-          <span style={{ position: 'absolute', left: '18px', fontSize: '16px', color: '#94a3b8', pointerEvents: 'none' }}>🔍</span>
-          <input 
-            type="text" 
-            placeholder="Search Claude skills, MCP servers, plugins, tools..." 
-            style={{ width: '100%', padding: '14px 130px 14px 48px', borderRadius: '9999px', border: '2px solid #e2e8f0', fontSize: '14px', outline: 'none', backgroundColor: '#ffffff', boxShadow: '0 8px 24px rgba(15, 23, 42, 0.04)', boxSizing: 'border-box', color: '#0f172a' }}
-          />
-          <span style={{ position: 'absolute', right: '100px', backgroundColor: '#f1f5f9', border: '1px solid #cbd5e1', color: '#64748b', borderRadius: '6px', padding: '2px 7px', fontSize: '11px', fontWeight: '700', pointerEvents: 'none' }}>⌘K</span>
-          <button type="submit" style={{ position: 'absolute', right: '6px', backgroundColor: '#ec4899', color: '#ffffff', border: 'none', padding: '9px 18px', borderRadius: '9999px', fontSize: '13px', fontWeight: '700', cursor: 'pointer', boxShadow: '0 2px 8px rgba(236, 72, 153, 0.3)' }}>Search</button>
-        </form>
-      </div>
-
       {/* Featured Hero Block */}
       {featured.title && (
-        <div style={{ backgroundColor: '#090d16', borderRadius: '24px', padding: '36px', color: '#ffffff', marginBottom: '32px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ backgroundColor: '#090d16', borderRadius: '24px', padding: '36px', color: '#ffffff', marginBottom: '32px' }}>
           <span style={{ backgroundColor: '#ec4899', color: '#ffffff', fontSize: '11px', fontWeight: '800', padding: '4px 12px', borderRadius: '9999px', textTransform: 'uppercase', display: 'inline-block', marginBottom: '16px' }}>FEATURED</span>
           <h1 style={{ fontSize: '32px', fontWeight: '800', margin: '0 0 12px 0' }}>
             <Link href={`/news-article/${featured.slug}`} style={{ color: '#ffffff', textDecoration: 'none' }}>
@@ -60,33 +47,17 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Ticker Strip */}
-      <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', marginBottom: '40px', background: '#f8fafc', padding: '12px 0', border: '1px solid #e2e8f0', borderRadius: '16px' }}>
-        <div style={{ display: 'inline-flex', gap: '16px', animation: 'marquee 25s linear infinite' }}>
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <Link key={i} href={`/news-article/${item.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <div style={{ minWidth: '260px', padding: '10px 16px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '12px', display: 'inline-block' }}>
-                <span style={{ fontSize: '11px', fontWeight: '700', color: '#ec4899', display: 'block' }}>⚡ BREAKING</span>
-                <span style={{ fontSize: '13px', fontWeight: '700', color: '#0f172a', whiteSpace: 'normal', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                  {item.title}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
       {/* Grid Header */}
       <div style={{ marginBottom: '20px' }}>
         <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#0f172a' }}>AI News & Protocol Updates</h2>
-        <p style={{ fontSize: '14px', color: '#64748b', margin: '4px 0 0 0' }}>Top 100 breaking stories and developments.</p>
+        <p style={{ fontSize: '14px', color: '#64748b', margin: '4px 0 0 0' }}>Latest breaking stories and developments.</p>
       </div>
 
       {/* Grid of Articles */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
         {latestNews.map((article) => (
           <Link key={article.slug} href={`/news-article/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div style={{ border: '1px solid #e2e8f0', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff', padding: '20px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div style={{ border: '1px solid #e2e8f0', borderRadius: '20px', backgroundColor: '#ffffff', padding: '20px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 {article.image && (
                   <img src={article.image} alt={article.title} style={{ width: '100%', height: '160px', objectFit: 'cover', borderRadius: '12px', marginBottom: '14px' }} />
