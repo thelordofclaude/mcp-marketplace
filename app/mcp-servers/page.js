@@ -3,6 +3,25 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 
+// MCPSkills Category Pills Data
+const CATEGORIES = [
+  { name: 'Official', slug: 'official' },
+  { name: 'Databases', slug: 'database' },
+  { name: 'DevOps & Cloud', slug: 'devops' },
+  { name: 'Developer Tools', slug: 'devtools' },
+  { name: 'Testing & QA', slug: 'testing' },
+  { name: 'Backend & APIs', slug: 'backend' },
+];
+
+// AI Tools Grid Data
+const AI_TOOLS = [
+  { name: 'Claude Desktop', icon: '🤖', desc: 'Anthropic Official Client' },
+  { name: 'Cursor', icon: '⚡', desc: 'AI-First Code Editor' },
+  { name: 'v0 by Vercel', icon: '▲', desc: 'Generative UI System' },
+  { name: 'Continue', icon: '💡', desc: 'Open-source AI Extension' },
+];
+
+// MCP Servers Data
 const MCP_SERVERS = [
   {
     id: '5ire-mcp',
@@ -10,9 +29,9 @@ const MCP_SERVERS = [
     slug: '5ire-mcp-server',
     subtitle: '5ire-io/mcp-server',
     description: 'Cross-platform desktop AI assistant and MCP client compatible with major AI workflows.',
-    category: 'Backend & APIs',
+    category: 'backend',
     installs: '5.3K',
-    featured: true
+    verified: true,
   },
   {
     id: 'api-mcp',
@@ -20,9 +39,9 @@ const MCP_SERVERS = [
     slug: 'best-api-mcp-servers',
     subtitle: 'mcp/api-tools',
     description: 'Connect frontier models directly to REST and GraphQL APIs with automated schema mapping.',
-    category: 'Backend & APIs',
+    category: 'backend',
     installs: '12.4K',
-    featured: false
+    verified: true,
   },
   {
     id: 'browser-mcp',
@@ -30,9 +49,9 @@ const MCP_SERVERS = [
     slug: 'best-browser-mcp-servers',
     subtitle: 'mcp/browser-automation',
     description: 'Autonomous web browsing and DOM extraction for Claude and Cursor agents.',
-    category: 'Testing & QA',
+    category: 'testing',
     installs: '8.9K',
-    featured: false
+    verified: false,
   },
   {
     id: 'database-mcp',
@@ -40,9 +59,9 @@ const MCP_SERVERS = [
     slug: 'database-mcp-servers',
     subtitle: 'mcp/database-connector',
     description: 'Safe read/write database connectors for Postgres, MySQL, and SQLite.',
-    category: 'Database',
+    category: 'database',
     installs: '15.1K',
-    featured: false
+    verified: true,
   },
   {
     id: 'devops-mcp',
@@ -50,9 +69,9 @@ const MCP_SERVERS = [
     slug: 'devops-mcp-servers',
     subtitle: 'mcp/devops-pipeline',
     description: 'Monitor deployment pipelines, logs, and server health from within Claude.',
-    category: 'DevOps',
+    category: 'devops',
     installs: '7.2K',
-    featured: false
+    verified: false,
   },
   {
     id: 'filesystem-mcp',
@@ -60,25 +79,16 @@ const MCP_SERVERS = [
     slug: 'filesystem-mcp-server',
     subtitle: 'mcp/filesystem-tools',
     description: 'Secure local filesystem access and operations for developer AI agents.',
-    category: 'Developer Tools',
+    category: 'devtools',
     installs: '22.8K',
-    featured: false
+    verified: true,
   }
 ];
 
-const CATEGORIES = [
-  { name: 'All Servers', slug: 'all', count: 198 },
-  { name: 'Backend & APIs', slug: 'backend', count: 42 },
-  { name: 'Developer Tools', slug: 'devtools', count: 38 },
-  { name: 'Database', slug: 'database', count: 29 },
-  { name: 'DevOps', slug: 'devops', count: 24 },
-  { name: 'Testing & QA', slug: 'testing', count: 18 },
-];
-
 export default function MCPServersPage() {
+  const [activeTab, setActiveTab] = useState('mcp'); // 'skills', 'mcp', 'tools'
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [sortBy, setSortBy] = useState('installed');
 
   const filteredServers = useMemo(() => {
     return MCP_SERVERS.filter((server) => {
@@ -88,237 +98,237 @@ export default function MCPServersPage() {
         server.subtitle.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesCategory =
-        selectedCategory === 'all' ||
-        server.category.toLowerCase().includes(selectedCategory.toLowerCase());
+        selectedCategory === 'all' || server.category === selectedCategory;
 
       return matchesSearch && matchesCategory;
     });
   }, [searchQuery, selectedCategory]);
 
   return (
-    <div style={{ backgroundColor: '#faf8f5', minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#1c1917', paddingBottom: '60px' }}>
+    <div style={{ backgroundColor: '#faf8f5', minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif', color: '#1c1917', paddingBottom: '80px' }}>
       
-      {/* Top Banner / Featured Promo Cards */}
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '24px 24px 0 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', marginBottom: '32px' }}>
-          
-          <div style={{ border: '1px solid #fecdd3', borderRadius: '12px', padding: '16px', backgroundColor: '#fff1f2', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '700', fontSize: '14px', color: '#e11d48' }}>
-                <span>⚡ CodeRabbit</span>
-              </div>
-              <p style={{ fontSize: '12px', color: '#475569', margin: '8px 0 12px 0', lineHeight: '1.4' }}>
-                AI writes the code. CodeRabbit catches the slop.
-              </p>
-            </div>
-            <a href="#" style={{ fontSize: '12px', fontWeight: '700', color: '#e11d48', textDecoration: 'none' }}>Try For Free →</a>
-          </div>
+      {/* 1. MCPSkills Central Search Header */}
+      <div style={{ maxWidth: '900px', margin: '0 auto', paddingTop: '40px', paddingLeft: '24px', paddingRight: '24px', textAlign: 'center' }}>
+        
+        {/* Tab Pills Bar */}
+        <div style={{ display: 'inline-flex', backgroundColor: '#e9d5ff', padding: '4px', borderRadius: '9999px', marginBottom: '16px', gap: '4px' }}>
+          <button
+            onClick={() => setActiveTab('skills')}
+            style={{
+              padding: '8px 20px',
+              borderRadius: '9999px',
+              border: 'none',
+              fontSize: '12px',
+              fontWeight: '800',
+              letterSpacing: '0.05em',
+              cursor: 'pointer',
+              backgroundColor: activeTab === 'skills' ? '#8b5cf6' : 'transparent',
+              color: activeTab === 'skills' ? '#ffffff' : '#6b21a8'
+            }}
+          >
+            SKILLS
+          </button>
+          <button
+            onClick={() => setActiveTab('mcp')}
+            style={{
+              padding: '8px 20px',
+              borderRadius: '9999px',
+              border: 'none',
+              fontSize: '12px',
+              fontWeight: '800',
+              letterSpacing: '0.05em',
+              cursor: 'pointer',
+              backgroundColor: activeTab === 'mcp' ? '#8b5cf6' : 'transparent',
+              color: activeTab === 'mcp' ? '#ffffff' : '#6b21a8'
+            }}
+          >
+            MCP SERVERS
+          </button>
+          <button
+            onClick={() => setActiveTab('tools')}
+            style={{
+              padding: '8px 20px',
+              borderRadius: '9999px',
+              border: 'none',
+              fontSize: '12px',
+              fontWeight: '800',
+              letterSpacing: '0.05em',
+              cursor: 'pointer',
+              backgroundColor: activeTab === 'tools' ? '#8b5cf6' : 'transparent',
+              color: activeTab === 'tools' ? '#ffffff' : '#6b21a8'
+            }}
+          >
+            AI TOOLS
+          </button>
+        </div>
 
-          <div style={{ border: '1px solid #fecdd3', borderRadius: '12px', padding: '16px', backgroundColor: '#fff1f2', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '700', fontSize: '14px', color: '#e11d48' }}>
-                <span>🤖 ego lite browser</span>
-              </div>
-              <p style={{ fontSize: '12px', color: '#475569', margin: '8px 0 12px 0', lineHeight: '1.4' }}>
-                Fastest browser for AI agents to run web automation tasks.
-              </p>
-            </div>
-            <a href="#" style={{ fontSize: '12px', fontWeight: '700', color: '#e11d48', textDecoration: 'none' }}>Download Free →</a>
-          </div>
+        {/* Large Central Search Input */}
+        <div style={{ position: 'relative', width: '100%', marginBottom: '24px' }}>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search MCP servers, tools, or skills..."
+            style={{
+              width: '100%',
+              padding: '16px 20px 16px 48px',
+              fontSize: '15px',
+              borderRadius: '16px',
+              border: '1px solid #e7e5e4',
+              backgroundColor: '#ffffff',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+              outline: 'none',
+              boxSizing: 'border-box'
+            }}
+          />
+          <span style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', fontSize: '18px', color: '#a8a29e' }}>🔍</span>
+        </div>
 
-          <div style={{ border: '1px solid #fecdd3', borderRadius: '12px', padding: '16px', backgroundColor: '#fff1f2', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '700', fontSize: '14px', color: '#e11d48' }}>
-                <span>▲ inference shell</span>
-              </div>
-              <p style={{ fontSize: '12px', color: '#475569', margin: '8px 0 12px 0', lineHeight: '1.4' }}>
-                Create and run specialized AI agents in minutes.
-              </p>
-            </div>
-            <a href="#" style={{ fontSize: '12px', fontWeight: '700', color: '#e11d48', textDecoration: 'none' }}>Build now →</a>
-          </div>
+        {/* 2. MCPSkills Category Pills Row */}
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '32px' }}>
+          <button
+            onClick={() => setSelectedCategory('all')}
+            style={{
+              padding: '6px 14px',
+              borderRadius: '9999px',
+              border: '1px solid #e7e5e4',
+              fontSize: '13px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              backgroundColor: selectedCategory === 'all' ? '#18181b' : '#ffffff',
+              color: selectedCategory === 'all' ? '#ffffff' : '#44403c'
+            }}
+          >
+            All
+          </button>
+          {CATEGORIES.map((cat) => {
+            const isActive = selectedCategory === cat.slug;
+            return (
+              <button
+                key={cat.slug}
+                onClick={() => setSelectedCategory(cat.slug)}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '9999px',
+                  border: '1px solid #e7e5e4',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  backgroundColor: isActive ? '#18181b' : '#ffffff',
+                  color: isActive ? '#ffffff' : '#44403c'
+                }}
+              >
+                {cat.name}
+              </button>
+            );
+          })}
+        </div>
 
-          <div style={{ border: '1px solid #fecdd3', borderRadius: '12px', padding: '16px', backgroundColor: '#fff1f2', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '700', fontSize: '14px', color: '#e11d48' }}>
-                <span>🎯 CodeHealth MCP</span>
-              </div>
-              <p style={{ fontSize: '12px', color: '#475569', margin: '8px 0 12px 0', lineHeight: '1.4' }}>
-                Protect your code quality, stop the AI slop.
-              </p>
-            </div>
-            <a href="#" style={{ fontSize: '12px', fontWeight: '700', color: '#e11d48', textDecoration: 'none' }}>Get MCP →</a>
-          </div>
+      </div>
 
+      {/* 3. Popular AI Tools Grid */}
+      <div style={{ maxWidth: '1000px', margin: '0 auto 40px auto', padding: '0 24px' }}>
+        <h3 style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', color: '#78716c', letterSpacing: '0.05em', marginBottom: '12px' }}>
+          Popular Compatible AI Clients
+        </h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '12px' }}>
+          {AI_TOOLS.map((tool) => (
+            <div
+              key={tool.name}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px 16px',
+                backgroundColor: '#ffffff',
+                borderRadius: '12px',
+                border: '1px solid #e7e5e4'
+              }}
+            >
+              <span style={{ fontSize: '20px' }}>{tool.icon}</span>
+              <div>
+                <div style={{ fontWeight: '700', fontSize: '13px' }}>{tool.name}</div>
+                <div style={{ fontSize: '11px', color: '#78716c' }}>{tool.desc}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Main Container: Sidebar + Content */}
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: '260px 1fr', gap: '40px' }}>
+      {/* 4. MCPSkills Main Servers Directory List */}
+      <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 24px' }}>
         
-        {/* Left Sidebar: Controls & Categories */}
-        <aside>
-          
-          {/* Search Bar */}
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', color: '#78716c', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
-              Search MCP Servers
-            </label>
-            <div style={{ position: 'relative' }}>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search tools, servers..."
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e7e5e4', paddingBottom: '12px', marginBottom: '16px' }}>
+          <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '0.05em', color: '#78716c', textTransform: 'uppercase' }}>
+            {filteredServers.length} MCP SERVERS DIRECTORY
+          </span>
+          <span style={{ fontSize: '11px', color: '#a8a29e', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            INSTALLS
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {filteredServers.length > 0 ? (
+            filteredServers.map((server, index) => (
+              <div
+                key={server.id}
                 style={{
-                  width: '100%',
-                  padding: '10px 12px 10px 36px',
-                  borderRadius: '10px',
-                  border: '1px solid #e7e5e4',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justify: 'space-between',
+                  padding: '18px 20px',
                   backgroundColor: '#ffffff',
-                  fontSize: '13px',
-                  outline: 'none',
-                  boxSizing: 'border-box'
+                  borderRadius: '14px',
+                  border: '1px solid #e7e5e4',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.01)'
                 }}
-              />
-              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#a8a29e', fontSize: '14px' }}>🔍</span>
-            </div>
-          </div>
-
-          {/* Sort Dropdown */}
-          <div style={{ marginBottom: '28px' }}>
-            <label style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', color: '#78716c', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
-              Sort
-            </label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                borderRadius: '10px',
-                border: '1px solid #e7e5e4',
-                backgroundColor: '#ffffff',
-                fontSize: '13px',
-                fontWeight: '600',
-                color: '#292524',
-                cursor: 'pointer'
-              }}
-            >
-              <option value="installed">MOST INSTALLED</option>
-              <option value="newest">NEWEST SERVERS</option>
-              <option value="alphabetical">ALPHABETICAL</option>
-            </select>
-          </div>
-
-          {/* Categories List */}
-          <div>
-            <label style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', color: '#78716c', letterSpacing: '0.05em', display: 'block', marginBottom: '12px' }}>
-              Categories
-            </label>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              {CATEGORIES.map((cat) => {
-                const isActive = selectedCategory === cat.slug;
-                return (
-                  <button
-                    key={cat.slug}
-                    onClick={() => setSelectedCategory(cat.slug)}
-                    style={{
-                      display: 'flex',
-                      justify: 'space-between',
-                      alignItems: 'center',
-                      padding: '8px 12px',
-                      borderRadius: '8px',
-                      border: 'none',
-                      backgroundColor: isActive ? '#f5f5f4' : 'transparent',
-                      color: isActive ? '#0c0a09' : '#57534e',
-                      fontWeight: isActive ? '700' : '500',
-                      fontSize: '13px',
-                      cursor: 'pointer',
-                      textAlign: 'left'
-                    }}
-                  >
-                    <span>{cat.name}</span>
-                    <span style={{ fontSize: '11px', color: '#a8a29e' }}>{cat.count}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-        </aside>
-
-        {/* Right Content Area */}
-        <main>
-          
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '1px solid #e7e5e4', paddingBottom: '12px', marginBottom: '16px' }}>
-            <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '0.05em', color: '#78716c', textTransform: 'uppercase' }}>
-              {filteredServers.length} MCP SERVERS FOUND
-            </span>
-            <div style={{ fontSize: '11px', color: '#a8a29e', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', gap: '16px' }}>
-              <span>INSTALLS</span>
-            </div>
-          </div>
-
-          {/* Server Items List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {filteredServers.length > 0 ? (
-              filteredServers.map((server, index) => (
-                <div
-                  key={server.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justify: 'space-between',
-                    padding: '16px',
-                    backgroundColor: '#ffffff',
-                    borderRadius: '12px',
-                    border: '1px solid #e7e5e4',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-                    <span style={{ fontSize: '13px', fontWeight: '700', color: '#a8a29e', width: '20px', paddingTop: '2px' }}>
-                      {index + 1}
-                    </span>
-                    <div style={{ backgroundColor: '#18181b', color: '#ffffff', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '14px' }}>
-                      ⚡
-                    </div>
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        {/* Links directly to /mcp-server/[slug] */}
-                        <Link href={`/mcp-server/${server.slug}`} style={{ textDecoration: 'none', color: '#0c0a09', fontWeight: '700', fontSize: '15px' }}>
-                          {server.title}
-                        </Link>
-                        <span style={{ fontFamily: 'monospace', fontSize: '12px', color: '#78716c', backgroundColor: '#f5f5f4', padding: '2px 6px', borderRadius: '4px' }}>
-                          {server.subtitle}
-                        </span>
-                      </div>
-                      <p style={{ fontSize: '13px', color: '#57534e', margin: '4px 0 0 0', lineHeight: '1.4' }}>
-                        {server.description}
-                      </p>
-                    </div>
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: '700', color: '#a8a29e', width: '20px' }}>
+                    {index + 1}
+                  </span>
+                  <div style={{ backgroundColor: '#18181b', color: '#ffffff', borderRadius: '10px', width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '16px' }}>
+                    ⚡
                   </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <span style={{ fontSize: '13px', fontWeight: '700', color: '#292524' }}>
-                      {server.installs}
-                    </span>
-                    <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', color: '#a8a29e' }}>
-                      🔖
-                    </button>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                      <Link href={`/mcp-server/${server.slug}`} style={{ textDecoration: 'none', color: '#0c0a09', fontWeight: '700', fontSize: '16px' }}>
+                        {server.title}
+                      </Link>
+                      {server.verified && (
+                        <span style={{ backgroundColor: '#dcfce7', color: '#15803d', fontSize: '10px', fontWeight: '800', padding: '2px 6px', borderRadius: '4px' }}>
+                          OFFICIAL
+                        </span>
+                      )}
+                      <span style={{ fontFamily: 'monospace', fontSize: '12px', color: '#78716c', backgroundColor: '#f5f5f4', padding: '2px 6px', borderRadius: '4px' }}>
+                        {server.subtitle}
+                      </span>
+                    </div>
+                    <p style={{ fontSize: '13px', color: '#57534e', margin: '4px 0 0 0', lineHeight: '1.4' }}>
+                      {server.description}
+                    </p>
                   </div>
                 </div>
-              ))
-            ) : (
-              <div style={{ padding: '40px', textAlign: 'center', color: '#78716c', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #e7e5e4' }}>
-                No MCP servers found matching "{searchQuery}".
-              </div>
-            )}
-          </div>
 
-        </main>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <span style={{ fontSize: '14px', fontWeight: '700', color: '#18181b' }}>
+                    {server.installs}
+                  </span>
+                  <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', color: '#a8a29e' }}>
+                    🔖
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div style={{ padding: '40px', textAlign: 'center', color: '#78716c', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #e7e5e4' }}>
+              No MCP servers found matching "{searchQuery}".
+            </div>
+          )}
+        </div>
 
       </div>
+
     </div>
   );
 }
