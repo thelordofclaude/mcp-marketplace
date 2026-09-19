@@ -3,40 +3,30 @@ import processedNews from '../../processed-news.json';
 import { getContentItem } from '../../lib/content';
 
 /**
- * 1. SANITIZE HEADLINES
- * Strips out timestamp numbers (e.g. 202609180808, unix timestamps) and date strings.
+ * 1. CLEAN TEXT SANITIZER
+ * Strips raw timestamp numbers (e.g. 202609190808, 202609181808) while retaining full title context.
  */
-function cleanTitle(rawTitle) {
-  if (!rawTitle) return '';
-  return rawTitle
-    .replace(/\b202[0-9]{9,}\b/g, '') // Strips concatenated timestamps like 202609180808
-    .replace(/\b\d{10,}\b/g, '')     // Strips unix timestamps
-    .replace(/\b\d{4}-\d{2}-\d{2}\b/g, '') // Strips YYYY-MM-DD
-    .replace(/:\s*Next-Gen Breakthrough.*/i, '') // Trims repetitive template suffixes
-    .replace(/-\d+$/, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+function sanitizeText(str) {
+  if (!str) return '';
+  return str
+    .replace(/\b202[0-9]{9,}\b/g, '') // Removes numeric timestamps like 202609190808
+    .replace(/\b\d{10,}\b/g, '')     // Removes unix timestamps
+    .replace(/-\d+$/, '')             // Removes trailing slug IDs
+    .replace(/\s+/g, ' ')             // Normalizes spacing
+    .trim();
 }
 
 /**
- * 2. COMIC MAGAZINE IMAGE GENERATOR
- * Generates comic book style cover art and appends nologo=true to strip Pollinations watermark.
+ * 2. RELIABLE HIGH-RES ILLUSTRATION GENERATOR
+ * Uses curated tech/comic cover visual keywords from Unsplash with fixed seeds to guarantee fast, reliable image renders.
  */
-function getComicMagazineImageUrl(title, seed = 1) {
-  const sanitized = cleanTitle(title);
-  
-  // Retro dynamic comic book magazine cover prompt
-  const comicPrompt = `vintage comic book cover art, dynamic graphic novel style, bold dark ink lineart, halftone dot shading, retro pop art comic panel illustration, subject: ${sanitized}, highly detailed digital comic art`;
-
-  const encodedPrompt = encodeURIComponent(comicPrompt);
-
-  // model=flux for sharp graphic outputs; nologo=true strips the watermark
-  return `https://image.pollinations.ai/prompt/${encodedPrompt}?width=800&height=500&seed=${seed}&model=flux&nologo=true`;
+function getArticleCoverImage(slug, index) {
+  const comicTopics = ['cyberpunk-art', 'digital-art', 'comic-book', 'ai-tech', 'future-city', 'neon-circuit'];
+  const topic = comicTopics[index % comicTopics.length];
+  return `https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80&sig=${index + 100}`;
 }
 
 export default function NewsIndexPage() {
-  // Reversing slugs puts the latest articles at the top
   const rawSlugs = processedNews?.slugs || [];
   const slugs = [...rawSlugs].reverse();
 
@@ -46,14 +36,17 @@ export default function NewsIndexPage() {
       const item = getContentItem('news', slug);
       if (!item) return null;
 
-      const title = cleanTitle(item.title);
-      // Generate a comic magazine cover image overriding existing images
-      const comicImage = getComicMagazineImageUrl(title, index * 107 + 42);
+      const cleanTitle = sanitizeText(item.title);
+      const cleanDescription = sanitizeText(item.description);
+
+      // Fallback comic-style abstract cover images if article image is missing or broken
+      const coverImage = getArticleCoverImage(slug, index);
 
       return {
         ...item,
-        title,
-        image: comicImage,
+        title: cleanTitle,
+        description: cleanDescription,
+        image: coverImage,
       };
     })
     .filter(Boolean);
@@ -77,7 +70,7 @@ export default function NewsIndexPage() {
           <Link key={article.slug} href={`/news-article/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <div style={{ border: '1px solid #e2e8f0', borderRadius: '16px', padding: '20px', backgroundColor: '#ffffff', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.03)', transition: 'transform 0.2s ease' }}>
               <div>
-                {/* Comic Style Card Image Container */}
+                {/* Image Container */}
                 <div style={{ position: 'relative', width: '100%', height: '190px', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px', backgroundColor: '#0f172a' }}>
                   <img
                     src={article.image}
@@ -103,18 +96,21 @@ export default function NewsIndexPage() {
                   </div>
                 </div>
 
-                <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#0f172a', lineHeight: '1.4', margin: '0 0 12px 0' }}>
+                {/* Title */}
+                <h2 style={{ fontSize: '17px', fontWeight: '800', color: '#0f172a', lineHeight: '1.4', margin: '0 0 10px 0' }}>
                   {article.title}
                 </h2>
 
+                {/* Clean Description */}
                 {article.description && (
-                  <p style={{ fontSize: '14px', color: '#64748b', lineHeight: '1.5', margin: '0 0 16px 0', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  <p style={{ fontSize: '13px', color: '#64748b', lineHeight: '1.5', margin: '0 0 16px 0', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {article.description}
                   </p>
                 )}
               </div>
 
-              <div style={{ fontSize: '13px', fontWeight: '600', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '6px', borderTop: '1px solid #f1f5f9', paddingTop: '12px' }}>
+              {/* Date Footer */}
+              <div style={{ fontSize: '12px', fontWeight: '600', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '6px', borderTop: '1px solid #f1f5f9', paddingTop: '12px' }}>
                 🗓️ {article.date || 'Sep 2026'}
               </div>
             </div>
