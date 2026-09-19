@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 
-// Sample MCP Server Data (Replace with your dynamic imports or JSON)
 const MCP_SERVERS = [
   {
     id: '5ire-mcp',
@@ -81,7 +80,6 @@ export default function MCPServersPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('installed');
 
-  // Interactive filtering logic
   const filteredServers = useMemo(() => {
     return MCP_SERVERS.filter((server) => {
       const matchesSearch =
@@ -161,7 +159,7 @@ export default function MCPServersPage() {
         {/* Left Sidebar: Controls & Categories */}
         <aside>
           
-          {/* Working Search Bar */}
+          {/* Search Bar */}
           <div style={{ marginBottom: '24px' }}>
             <label style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', color: '#78716c', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
               Search MCP Servers
@@ -227,7 +225,7 @@ export default function MCPServersPage() {
                     onClick={() => setSelectedCategory(cat.slug)}
                     style={{
                       display: 'flex',
-                      justifyContent: 'space-between',
+                      justify: 'space-between',
                       alignItems: 'center',
                       padding: '8px 12px',
                       borderRadius: '8px',
@@ -253,19 +251,16 @@ export default function MCPServersPage() {
         {/* Right Content Area */}
         <main>
           
-          {/* Header Row */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '1px solid #e7e5e4', paddingBottom: '12px', marginBottom: '16px' }}>
             <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '0.05em', color: '#78716c', textTransform: 'uppercase' }}>
               {filteredServers.length} MCP SERVERS FOUND
             </span>
             <div style={{ fontSize: '11px', color: '#a8a29e', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', gap: '16px' }}>
-              <span>#</span>
-              <span>SERVER</span>
               <span>INSTALLS</span>
             </div>
           </div>
 
-          {/* Server List */}
+          {/* Server Items List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {filteredServers.length > 0 ? (
               filteredServers.map((server, index) => (
@@ -274,12 +269,11 @@ export default function MCPServersPage() {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
+                    justify: 'space-between',
                     padding: '16px',
                     backgroundColor: '#ffffff',
                     borderRadius: '12px',
                     border: '1px solid #e7e5e4',
-                    transition: 'border-color 0.2s ease'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
@@ -291,7 +285,8 @@ export default function MCPServersPage() {
                     </div>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Link href={`/mcp/${server.slug}`} style={{ textDecoration: 'none', color: '#0c0a09', fontWeight: '700', fontSize: '15px' }}>
+                        {/* Links directly to /mcp-server/[slug] */}
+                        <Link href={`/mcp-server/${server.slug}`} style={{ textDecoration: 'none', color: '#0c0a09', fontWeight: '700', fontSize: '15px' }}>
                           {server.title}
                         </Link>
                         <span style={{ fontFamily: 'monospace', fontSize: '12px', color: '#78716c', backgroundColor: '#f5f5f4', padding: '2px 6px', borderRadius: '4px' }}>
